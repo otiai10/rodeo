@@ -23,7 +23,11 @@ func main() {
 
 	resp = make([]byte, 1024)
 
-	conn, _ = net.Dial("tcp", "localhost:6379")
+	conn, err = net.Dial("tcp", "localhost:6379")
+	if err != nil {
+		fmt.Println("Error on net.Dial:\t", err)
+		return
+	}
 	reader = bufio.NewReaderSize(conn, 1024)
 
 	fmt.Fprintf(conn, "*3\r\n$3\r\nSET\r\n$7\r\ntainaka\r\n$5\r\nritsu\r\n")
