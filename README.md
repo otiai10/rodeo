@@ -13,9 +13,9 @@ func main() {
     vaquero := rodeo.TheVaquero(conf)
 
     _ = vaquero.Set("my_key", 12345)
-    myVal, _ := vaquero.Get("my_key")
-    fmt.Pritnln(myVal)
-    // 12345
+    val, _ := vaquero.Get("my_key")
+    fmt.Pritnf("%T %v", val, val)
+    // string 12345
 
     foo := Foo{"bar"}
     _ = vaquero.Set("my_foo", foo, Foo)
