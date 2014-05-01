@@ -7,7 +7,7 @@ import "fmt"
 import "github.com/robfig/config"
 
 func TestVaquero(t *testing.T) {
-	conf, _ := config.ReadDefault("test.conf")
+	conf, _ := config.ReadDefault("sample.conf")
 	vaquero, e := TheVaquero(conf)
 	fmt.Println(vaquero, e)
 }
