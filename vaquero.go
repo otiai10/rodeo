@@ -21,9 +21,27 @@ func TheVaquero(conf *config.Config, args ...string) (v *Vaquero, e error) {
 }
 
 func ensureConf(conf *config.Config, args []string) (c C, e error) {
+
+	if len(args) == 0 {
+		return confDefault(conf)
+	}
 	var host, port string
-	host, e = conf.String("test", "host")
-	port, e = conf.String("test", "port")
+	host, e = conf.String(args[0], "host")
+	port, e = conf.String(args[0], "port")
+	c = C{
+		host,
+		port,
+	}
+	return
+}
+
+func confDefault(conf *config.Config) (c C, e error) {
+	var host, port string
+	host, e = conf.String("default", "host")
+	port, e = conf.String("default", "port")
+	if e != nil {
+		return
+	}
 	c = C{
 		host,
 		port,
