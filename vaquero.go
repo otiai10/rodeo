@@ -16,7 +16,14 @@ type C struct {
 func TheVaquero(conf *config.Config, args ...string) (v *Vaquero, e error) {
 	var c C
 	c, e = ensureConf(conf, args)
-	conn, _ := connect(c.Host, c.Port)
+	if e != nil {
+		return
+	}
+	var conn net.Conn
+	conn, e = connect(c.Host, c.Port)
+	if e != nil {
+		return
+	}
 	v = &Vaquero{
 		c,
 		conn,

@@ -2,6 +2,7 @@ package rodeo_test
 
 import . "github.com/otiai10/rodeo"
 
+import "fmt"
 import "testing"
 import "github.com/robfig/config"
 
@@ -12,7 +13,9 @@ func TestTheVaquero(t *testing.T) {
 	vaquero, e := TheVaquero(conf, "test")
 
 	if e != nil {
+		fmt.Println(e)
 		t.Fail()
+		return
 	}
 	if vaquero.Conf.Port != "6379" {
 		t.Fail()
@@ -21,7 +24,16 @@ func TestTheVaquero(t *testing.T) {
 func TestTheVaqueroFail00(t *testing.T) {
 	conf, _ := config.ReadDefault("sample.conf")
 	_, e := TheVaquero(conf, "missing")
-	if e.Error() != "option not found: port" {
+	if e == nil || e.Error() != "option not found: port" {
+		fmt.Println(e)
+		t.Fail()
+	}
+}
+func TestTheVaqueroFail01(t *testing.T) {
+	conf, _ := config.ReadDefault("sample.conf")
+	_, e := TheVaquero(conf, "notfound")
+	if e == nil || e.Error() != "dial tcp: invalid port 99999" {
+		fmt.Println(e)
 		t.Fail()
 	}
 }
