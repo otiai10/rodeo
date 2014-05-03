@@ -19,6 +19,20 @@ func TestTheVaquero(t *testing.T) {
 	}
 	if vaquero.Conf.Port != "6379" {
 		t.Fail()
+		return
+	}
+
+	e = vaquero.Set("mykey", 12345)
+	if e != nil {
+		fmt.Println(e)
+		t.Fail()
+		return
+	}
+
+	val := vaquero.Get("mykey")
+	if val != "12345" {
+		fmt.Println(val)
+		return
 	}
 }
 func TestTheVaqueroFail00(t *testing.T) {

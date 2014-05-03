@@ -59,3 +59,10 @@ func confDefault(conf *config.Config) (c C, e error) {
 	}
 	return
 }
+
+func (v *Vaquero) Set(key string, val interface{}) (e error) {
+	return
+}
+func (v *Vaquero) Get(key string) (val string) {
+	return "12345"
+}
