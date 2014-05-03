@@ -5,6 +5,7 @@ import "encoding/json"
 
 import "fmt"
 
+// インターフェースを提供する
 type Vaquero struct {
 	Conf   Conf // should not be exported?
 	client TcpClient

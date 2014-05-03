@@ -2,8 +2,12 @@ package rodeo
 
 import "net"
 
+// TcpClientって何すんだろう
+// key string, val string のkvsすべてに対応できる
+// Memcachedでも動くように設計する
 type TcpClient struct {
-	Conn net.Conn
+	Conn   net.Conn
+	Server Protocol
 }
 
 func (client *TcpClient) GetStringAnyway(key string) (value string) {

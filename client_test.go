@@ -54,6 +54,7 @@ func getTestClient() TcpClient {
 	)
 	client = TcpClient{
 		conn,
+		&RedisProtocol{},
 	}
 	return client
 }

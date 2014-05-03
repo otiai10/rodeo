@@ -12,6 +12,7 @@ func connect(host, port string) (client TcpClient, e error) {
 	)
 	client = TcpClient{
 		conn,
+		&RedisProtocol{},
 	}
 	return
 }
