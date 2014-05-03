@@ -1,11 +1,10 @@
 package rodeo
 
 import "github.com/robfig/config"
-import "net"
 
 type Vaquero struct {
-	Conf C // should not be exported?
-	Conn net.Conn
+	Conf   C // should not be exported?
+	client TcpClient
 }
 
 type C struct {
@@ -19,14 +18,14 @@ func TheVaquero(conf *config.Config, args ...string) (v *Vaquero, e error) {
 	if e != nil {
 		return
 	}
-	var conn net.Conn
-	conn, e = connect(c.Host, c.Port)
+	var client TcpClient
+	client, e = connect(c.Host, c.Port)
 	if e != nil {
 		return
 	}
 	v = &Vaquero{
 		c,
-		conn,
+		client,
 	}
 	return
 }
