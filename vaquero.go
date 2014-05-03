@@ -3,17 +3,17 @@ package rodeo
 import "github.com/robfig/config"
 
 type Vaquero struct {
-	Conf   C // should not be exported?
+	Conf   Conf // should not be exported?
 	client TcpClient
 }
 
-type C struct {
+type Conf struct {
 	Host string
 	Port string
 }
 
 func TheVaquero(conf *config.Config, args ...string) (v *Vaquero, e error) {
-	var c C
+	var c Conf
 	c, e = ensureConf(conf, args)
 	if e != nil {
 		return
@@ -30,7 +30,7 @@ func TheVaquero(conf *config.Config, args ...string) (v *Vaquero, e error) {
 	return
 }
 
-func ensureConf(conf *config.Config, args []string) (c C, e error) {
+func ensureConf(conf *config.Config, args []string) (c Conf, e error) {
 
 	if len(args) == 0 {
 		return confDefault(conf)
@@ -38,21 +38,21 @@ func ensureConf(conf *config.Config, args []string) (c C, e error) {
 	var host, port string
 	host, e = conf.String(args[0], "host")
 	port, e = conf.String(args[0], "port")
-	c = C{
+	c = Conf{
 		host,
 		port,
 	}
 	return
 }
 
-func confDefault(conf *config.Config) (c C, e error) {
+func confDefault(conf *config.Config) (c Conf, e error) {
 	var host, port string
 	host, e = conf.String("default", "host")
 	port, e = conf.String("default", "port")
 	if e != nil {
 		return
 	}
-	c = C{
+	c = Conf{
 		host,
 		port,
 	}
