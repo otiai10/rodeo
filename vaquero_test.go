@@ -32,8 +32,31 @@ func TestTheVaquero(t *testing.T) {
 	val := vaquero.Get("mykey")
 	if val != "12345" {
 		fmt.Println(val)
+		t.Fail()
 		return
 	}
+
+	obj := new(struct {
+		Foo bool
+	})
+	obj.Foo = true
+	e = vaquero.Store("mykey", obj)
+	if e != nil {
+		fmt.Println(e)
+		t.Fail()
+		return
+	}
+
+	dest := new(struct {
+		Foo bool
+	})
+	e = vaquero.Cast("mykey", &dest)
+	if e != nil {
+		fmt.Println(e)
+		t.Fail()
+		return
+	}
+	// fmt.Printf("%T %+v", dest, dest)
 }
 func TestTheVaqueroFail00(t *testing.T) {
 	conf, _ := config.ReadDefault("sample.conf")

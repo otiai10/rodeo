@@ -1,6 +1,9 @@
 package rodeo
 
 import "github.com/robfig/config"
+import "encoding/json"
+
+import "fmt"
 
 type Vaquero struct {
 	Conf   Conf // should not be exported?
@@ -64,4 +67,14 @@ func (v *Vaquero) Set(key string, val interface{}) (e error) {
 }
 func (v *Vaquero) Get(key string) (val string) {
 	return "12345"
+}
+func (v *Vaquero) Store(key string, obj interface{}) (e error) {
+	var bs []byte
+	bs, e = json.Marshal(obj)
+	// debug
+	fmt.Printf("%T > %v\n", string(bs), string(bs))
+	return
+}
+func (v *Vaquero) Cast(key string, dest interface{}) (e error) {
+	return json.Unmarshal([]byte("{\"Foo\":true}"), dest)
 }
