@@ -36,27 +36,59 @@ func TestTheVaquero(t *testing.T) {
 		return
 	}
 
-	obj := new(struct {
+	key0 := "mykey0"
+	obj0 := new(struct {
 		Foo bool
 	})
-	obj.Foo = true
-	e = vaquero.Store("mykey", obj)
+	obj0.Foo = true
+	e = vaquero.Store(key0, obj0)
 	if e != nil {
 		fmt.Println(e)
 		t.Fail()
 		return
 	}
 
-	dest := new(struct {
+	dest0 := new(struct {
 		Foo bool
 	})
-	e = vaquero.Cast("mykey", &dest)
+	e = vaquero.Cast(key0, &dest0)
 	if e != nil {
 		fmt.Println(e)
 		t.Fail()
 		return
 	}
-	// fmt.Printf("%T %+v", dest, dest)
+	if dest0.Foo != true {
+		fmt.Println(dest0)
+		t.Fail()
+		return
+	}
+
+	key1 := "mykey1"
+	obj1 := new(struct {
+		Bar bool
+	})
+	obj1.Bar = false
+	e = vaquero.Store(key1, obj1)
+	if e != nil {
+		fmt.Println(e)
+		t.Fail()
+		return
+	}
+
+	dest1 := new(struct {
+		Bar bool
+	})
+	e = vaquero.Cast(key1, &dest1)
+	if e != nil {
+		fmt.Println(e)
+		t.Fail()
+		return
+	}
+	if dest1.Bar != false {
+		fmt.Println(dest1)
+		t.Fail()
+		return
+	}
 }
 func TestTheVaqueroFail00(t *testing.T) {
 	conf, _ := config.ReadDefault("sample.conf")
