@@ -54,9 +54,7 @@ func TestVaquero_Store(t *testing.T) {
 		return
 	}
 
-	dest0 := new(struct {
-		Foo bool
-	})
+	var dest0 tStruct0
 	e = vaquero.Cast(key0, &dest0)
 	if e != nil {
 		fmt.Println(e)
