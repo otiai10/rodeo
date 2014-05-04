@@ -8,7 +8,6 @@ import "fmt"
 
 import "net"
 import "reflect"
-import "strconv"
 
 func TestTcpClient(t *testing.T) {
 
@@ -21,7 +20,7 @@ func TestTcpClient(t *testing.T) {
 	}
 
 	var key string = "mykey"
-	var val int = 12345
+	var val string = "12345"
 
 	var e error
 	e = client.Set(key, val)
@@ -37,7 +36,7 @@ func TestTcpClient(t *testing.T) {
 		t.Fail()
 		return
 	}
-	if gotVal != strconv.Itoa(val) {
+	if gotVal != val {
 		fmt.Printf(
 			"`%s` got for key `%s` is not `%s`",
 			gotVal, key, val,
