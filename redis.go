@@ -4,6 +4,8 @@ import "net"
 import "errors"
 import "strings"
 import "strconv"
+import "fmt"
+import "bufio"
 
 // 相手がredisであることを知っている
 // redis特有の文字列整形を知っている
@@ -14,8 +16,9 @@ type RedisProtocol struct {
 }
 
 var (
-	bulklen = "$"
-	sep     = "\r\n"
+	bulklen  = "$"
+	sep      = "\r\n"
+	buf_size = 1024
 )
 var (
 	CMD_GET = "GET"
@@ -39,9 +42,24 @@ func (p *RedisProtocol) Request(args ...string) Protocol {
 		}
 		return p.generateSetMessage(args[1], args[2])
 	}
-	return p
+	return p.isError(fmt.Sprintf("Command not found for `%s`", args[0]))
 }
 func (p *RedisProtocol) Execute(conn net.Conn) Protocol {
+
+	if p.Error != nil {
+		return p
+	}
+
+	tcpConnReader := bufio.NewReaderSize(conn, buf_size)
+
+	fmt.Fprintf(conn, string(p.message))
+
+	responseBuffer := make([]byte, buf_size)
+	_, rerr := tcpConnReader.Read(responseBuffer)
+
+	if rerr != nil {
+		return p.isError(rerr.Error())
+	}
 	return p
 }
 func (p *RedisProtocol) ToResult() Result {
