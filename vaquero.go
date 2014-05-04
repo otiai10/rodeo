@@ -77,5 +77,5 @@ func (v *Vaquero) Store(key string, obj interface{}) (e error) {
 	return
 }
 func (v *Vaquero) Cast(key string, dest interface{}) (e error) {
-	return json.Unmarshal([]byte("{\"Foo\":true}"), dest)
+	return json.Unmarshal([]byte("{\"Foo\":\"Hello, rodeo\"}"), dest)
 }

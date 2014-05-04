@@ -9,7 +9,7 @@ import "github.com/robfig/config"
 var conf, _ = config.ReadDefault("sample.conf")
 
 type tStruct0 struct {
-	Foo bool
+	Foo string
 }
 
 func TestVaquero_Set(t *testing.T) {
@@ -46,7 +46,7 @@ func TestVaquero_Store(t *testing.T) {
 	vaquero, e := TheVaquero(conf, "test")
 
 	key0 := "mykey0"
-	obj0 := tStruct0{true}
+	obj0 := tStruct0{"Hello, rodeo"}
 	e = vaquero.Store(key0, obj0)
 	if e != nil {
 		fmt.Println(e)
@@ -61,7 +61,7 @@ func TestVaquero_Store(t *testing.T) {
 		t.Fail()
 		return
 	}
-	if dest0.Foo != true {
+	if dest0.Foo != "Hello, rodeo" {
 		fmt.Println(dest0)
 		t.Fail()
 		return
