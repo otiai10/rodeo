@@ -8,7 +8,11 @@ import "github.com/robfig/config"
 
 var conf, _ = config.ReadDefault("sample.conf")
 
-func TestTheVaquero(t *testing.T) {
+type tStruct0 struct {
+	Foo bool
+}
+
+func TestVaquero_Set(t *testing.T) {
 
 	vaquero, e := TheVaquero(conf, "test")
 
@@ -35,12 +39,14 @@ func TestTheVaquero(t *testing.T) {
 		t.Fail()
 		return
 	}
+}
+
+func TestVaquero_Store(t *testing.T) {
+
+	vaquero, e := TheVaquero(conf, "test")
 
 	key0 := "mykey0"
-	obj0 := new(struct {
-		Foo bool
-	})
-	obj0.Foo = true
+	obj0 := tStruct0{true}
 	e = vaquero.Store(key0, obj0)
 	if e != nil {
 		fmt.Println(e)
