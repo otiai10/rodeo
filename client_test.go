@@ -1,6 +1,7 @@
 package rodeo_test
 
-import . "github.com/otiai10/rodeo"
+import "github.com/otiai10/rodeo"
+import "github.com/otiai10/rodeo/protocol"
 
 import "testing"
 import "fmt"
@@ -46,15 +47,15 @@ func TestTcpClient(t *testing.T) {
 	}
 }
 
-func getTestClient() TcpClient {
-	var client TcpClient
+func getTestClient() rodeo.TcpClient {
+	var client rodeo.TcpClient
 	conn, _ := net.Dial(
 		"tcp",
 		"localhost:6379",
 	)
-	client = TcpClient{
+	client = rodeo.TcpClient{
 		conn,
-		&RedisProtocol{},
+		&protocol.RedisProtocol{},
 	}
 	return client
 }

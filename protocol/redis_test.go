@@ -1,6 +1,6 @@
-package rodeo_test
+package protocol_test
 
-import "github.com/otiai10/rodeo"
+import "github.com/otiai10/rodeo/protocol"
 
 import "testing"
 import "reflect"
@@ -10,9 +10,9 @@ import "net"
 
 func TestRedisProtocol(t *testing.T) {
 
-	redisProtocol := rodeo.RedisProtocol{}
+	redisProtocol := protocol.RedisProtocol{}
 
-	if reflect.TypeOf(redisProtocol).String() != "rodeo.RedisProtocol" {
+	if reflect.TypeOf(redisProtocol).String() != "protocol.RedisProtocol" {
 		t.Fail()
 		return
 	}
@@ -20,10 +20,10 @@ func TestRedisProtocol(t *testing.T) {
 
 func TestRedisProtocol_Request(t *testing.T) {
 
-	var redisProtocol rodeo.RedisProtocol
+	var redisProtocol protocol.RedisProtocol
 	var message string
 
-	redisProtocol = rodeo.RedisProtocol{}
+	redisProtocol = protocol.RedisProtocol{}
 
 	_ = redisProtocol.Request("GET", "mykey")
 
@@ -46,8 +46,8 @@ func TestRedisProtocol_Execute(t *testing.T) {
 
 	conn, _ := net.Dial("tcp", "localhost:6379")
 
-	var redisProtocol rodeo.RedisProtocol
-	redisProtocol = rodeo.RedisProtocol{}
+	var redisProtocol protocol.RedisProtocol
+	redisProtocol = protocol.RedisProtocol{}
 
 	_ = redisProtocol.Request("SET", "mykey", "Hello!!").Execute(conn)
 	if redisProtocol.Error != nil {

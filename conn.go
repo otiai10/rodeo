@@ -2,6 +2,7 @@ package rodeo
 
 import "net"
 import "fmt"
+import "github.com/otiai10/rodeo/protocol"
 
 var f_location = "%s:%s"
 
@@ -12,7 +13,7 @@ func connect(host, port string) (client TcpClient, e error) {
 	)
 	client = TcpClient{
 		conn,
-		&RedisProtocol{},
+		&protocol.RedisProtocol{},
 	}
 	return
 }

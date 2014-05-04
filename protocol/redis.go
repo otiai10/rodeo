@@ -1,4 +1,4 @@
-package rodeo
+package protocol
 
 import "net"
 import "errors"
