@@ -12,7 +12,7 @@ type tStruct0 struct {
 	Foo string
 }
 
-func TestVaquero_Set(t *testing.T) {
+func TestTheVaquero(t *testing.T) {
 
 	vaquero, e := TheVaquero(conf, "test")
 
@@ -25,6 +25,11 @@ func TestVaquero_Set(t *testing.T) {
 		t.Fail()
 		return
 	}
+}
+
+func TestVaquero_Set(t *testing.T) {
+
+	vaquero, e := TheVaquero(conf, "test")
 
 	e = vaquero.Set("mykey", 12345)
 	if e != nil {
