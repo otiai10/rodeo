@@ -6,8 +6,8 @@ import "net"
 // key string, val string のkvsすべてに対応できる
 // Memcachedでも動くように設計する
 type TcpClient struct {
-	Conn   net.Conn
-	Server Protocol
+	Conn    net.Conn
+	Protcol Protocol
 }
 
 func (client *TcpClient) GetStringAnyway(key string) (value string) {
