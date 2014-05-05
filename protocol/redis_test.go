@@ -62,3 +62,24 @@ func TestRedisProtocol_Execute(t *testing.T) {
 		return
 	}
 }
+func TestRedisProtocol_ToResult(t *testing.T) {
+
+	conn, _ := net.Dial("tcp", "localhost:6379")
+
+	var redisProtocol protocol.RedisProtocol
+	redisProtocol = protocol.RedisProtocol{}
+
+	result := redisProtocol.Request("SET", "mykey", "Hello!!").Execute(conn).ToResult()
+	fmt.Printf("%+v", result)
+	if redisProtocol.Error != nil {
+		fmt.Println(redisProtocol.Error.Error())
+		t.Fail()
+		return
+	}
+	_ = redisProtocol.Request("GET", "mykey").Execute(conn)
+	if redisProtocol.Error != nil {
+		fmt.Println(redisProtocol.Error.Error())
+		t.Fail()
+		return
+	}
+}
