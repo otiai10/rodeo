@@ -4,11 +4,9 @@ import "github.com/otiai10/rodeo/protocol"
 
 import "net"
 import "errors"
-import "strings"
 import "strconv"
-import "fmt"
 import "bufio"
-import "regexp"
+import "fmt"
 
 // 相手がredisであることを知っている
 // redis特有の文字列整形を知っている
@@ -79,55 +77,6 @@ func (p *RedisProtocol) ToResult() (result protocol.Result) {
 		return p.generateSetResponse(p.response)
 	}
 	return
-}
-func (p *RedisProtocol) generateGetResponse(res []byte) protocol.Result {
-	result := protocol.Result{}
-	if ok, _ := regexp.Match("\\$.\\r\\n", res); ok {
-		lines := strings.Split(string(res), "\r\n")
-		result.Response = lines[1]
-		return result
-	}
-	result.Response = string(res)
-	result.Error = errors.New(
-		fmt.Sprintf("Response to `Get` is `%v`", string(res)),
-	)
-	return result
-}
-func (p *RedisProtocol) generateSetResponse(res []byte) protocol.Result {
-	result := protocol.Result{}
-	if ok, _ := regexp.Match("\\+OK", res); ok {
-		result.Response = "OK"
-		return result
-	}
-	result.Response = string(res)
-	result.Error = errors.New("Response to `SET` is not OK")
-	return result
-}
-func (p *RedisProtocol) generateGetMessage(key string) protocol.Protocol {
-	words := []string{
-		"*2",
-		p.getLenStr(CMD_GET),
-		CMD_GET,
-		p.getLenStr(key),
-		key,
-	}
-	joined := strings.Join(words, sep) + sep
-	p.message = []byte(joined)
-	return p
-}
-func (p *RedisProtocol) generateSetMessage(key, value string) protocol.Protocol {
-	words := []string{
-		"*3",
-		p.getLenStr(CMD_SET),
-		CMD_SET,
-		p.getLenStr(key),
-		key,
-		p.getLenStr(value),
-		value,
-	}
-	joined := strings.Join(words, sep) + sep
-	p.message = []byte(joined)
-	return p
 }
 func (p *RedisProtocol) getLenStr(str string) string {
 	return marker_len + strconv.Itoa(len(str))
