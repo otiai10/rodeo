@@ -70,15 +70,14 @@ func TestRedisProtocol_ToResult(t *testing.T) {
 	redisProtocol = protocol.RedisProtocol{}
 
 	result := redisProtocol.Request("SET", "mykey", "Hello!!").Execute(conn).ToResult()
-	fmt.Printf("%+v", result)
-	if redisProtocol.Error != nil {
-		fmt.Println(redisProtocol.Error.Error())
+	if result.Response != "OK" {
+		fmt.Printf("%+v", result)
 		t.Fail()
 		return
 	}
-	_ = redisProtocol.Request("GET", "mykey").Execute(conn)
-	if redisProtocol.Error != nil {
-		fmt.Println(redisProtocol.Error.Error())
+	result = redisProtocol.Request("GET", "mykey").Execute(conn).ToResult()
+	if result.Response != "Hello!!" {
+		fmt.Printf("%+v", result)
 		t.Fail()
 		return
 	}

@@ -9,4 +9,7 @@ type Protocol interface {
 	Execute(conn net.Conn) Protocol
 	ToResult() Result
 }
-type Result struct{}
+type Result struct {
+	Response string
+	Error    error
+}
