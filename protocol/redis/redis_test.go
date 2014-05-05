@@ -1,6 +1,6 @@
-package protocol_test
+package redis_test
 
-import "github.com/otiai10/rodeo/protocol"
+import "github.com/otiai10/rodeo/protocol/redis"
 
 import "testing"
 import "reflect"
@@ -10,9 +10,10 @@ import "net"
 
 func TestRedisProtocol(t *testing.T) {
 
-	redisProtocol := protocol.RedisProtocol{}
+	redisProtocol := redis.RedisProtocol{}
 
-	if reflect.TypeOf(redisProtocol).String() != "protocol.RedisProtocol" {
+	if reflect.TypeOf(redisProtocol).String() != "redis.RedisProtocol" {
+		fmt.Println("TypeError: ", reflect.TypeOf(redisProtocol).String())
 		t.Fail()
 		return
 	}
@@ -20,10 +21,10 @@ func TestRedisProtocol(t *testing.T) {
 
 func TestRedisProtocol_Request(t *testing.T) {
 
-	var redisProtocol protocol.RedisProtocol
+	var redisProtocol redis.RedisProtocol
 	var message string
 
-	redisProtocol = protocol.RedisProtocol{}
+	redisProtocol = redis.RedisProtocol{}
 
 	_ = redisProtocol.Request("GET", "mykey")
 
@@ -46,8 +47,8 @@ func TestRedisProtocol_Execute(t *testing.T) {
 
 	conn, _ := net.Dial("tcp", "localhost:6379")
 
-	var redisProtocol protocol.RedisProtocol
-	redisProtocol = protocol.RedisProtocol{}
+	var redisProtocol redis.RedisProtocol
+	redisProtocol = redis.RedisProtocol{}
 
 	_ = redisProtocol.Request("SET", "mykey", "Hello!!").Execute(conn)
 	if redisProtocol.Error != nil {
@@ -66,8 +67,8 @@ func TestRedisProtocol_ToResult(t *testing.T) {
 
 	conn, _ := net.Dial("tcp", "localhost:6379")
 
-	var redisProtocol protocol.RedisProtocol
-	redisProtocol = protocol.RedisProtocol{}
+	var redisProtocol redis.RedisProtocol
+	redisProtocol = redis.RedisProtocol{}
 
 	result := redisProtocol.Request("SET", "mykey", "Hello!!").Execute(conn).ToResult()
 	if result.Response != "OK" {

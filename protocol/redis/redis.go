@@ -1,4 +1,6 @@
-package protocol
+package redis
+
+import "github.com/otiai10/rodeo/protocol"
 
 import "net"
 import "errors"
@@ -32,7 +34,7 @@ var (
 	E_Header = "RedisProtocol: "
 )
 
-func (p *RedisProtocol) Request(args ...string) Protocol {
+func (p *RedisProtocol) Request(args ...string) protocol.Protocol {
 	lenArgs := len(args)
 	if lenArgs < 2 {
 		return p.isError("Too short params")
@@ -49,7 +51,7 @@ func (p *RedisProtocol) Request(args ...string) Protocol {
 	}
 	return p.isError(fmt.Sprintf("Command not found for `%s`", p.Command))
 }
-func (p *RedisProtocol) Execute(conn net.Conn) Protocol {
+func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 
 	if p.Error != nil {
 		return p
@@ -69,7 +71,7 @@ func (p *RedisProtocol) Execute(conn net.Conn) Protocol {
 	p.response = response
 	return p
 }
-func (p *RedisProtocol) ToResult() (result Result) {
+func (p *RedisProtocol) ToResult() (result protocol.Result) {
 	switch p.Command {
 	case CMD_GET:
 		return p.generateGetResponse(p.response)
@@ -78,8 +80,8 @@ func (p *RedisProtocol) ToResult() (result Result) {
 	}
 	return
 }
-func (p *RedisProtocol) generateGetResponse(res []byte) Result {
-	result := Result{}
+func (p *RedisProtocol) generateGetResponse(res []byte) protocol.Result {
+	result := protocol.Result{}
 	if ok, _ := regexp.Match("\\$.\\r\\n", res); ok {
 		lines := strings.Split(string(res), "\r\n")
 		result.Response = lines[1]
@@ -91,8 +93,8 @@ func (p *RedisProtocol) generateGetResponse(res []byte) Result {
 	)
 	return result
 }
-func (p *RedisProtocol) generateSetResponse(res []byte) Result {
-	result := Result{}
+func (p *RedisProtocol) generateSetResponse(res []byte) protocol.Result {
+	result := protocol.Result{}
 	if ok, _ := regexp.Match("\\+OK", res); ok {
 		result.Response = "OK"
 		return result
@@ -101,7 +103,7 @@ func (p *RedisProtocol) generateSetResponse(res []byte) Result {
 	result.Error = errors.New("Response to `SET` is not OK")
 	return result
 }
-func (p *RedisProtocol) generateGetMessage(key string) Protocol {
+func (p *RedisProtocol) generateGetMessage(key string) protocol.Protocol {
 	words := []string{
 		"*2",
 		p.getLenStr(CMD_GET),
@@ -113,7 +115,7 @@ func (p *RedisProtocol) generateGetMessage(key string) Protocol {
 	p.message = []byte(joined)
 	return p
 }
-func (p *RedisProtocol) generateSetMessage(key, value string) Protocol {
+func (p *RedisProtocol) generateSetMessage(key, value string) protocol.Protocol {
 	words := []string{
 		"*3",
 		p.getLenStr(CMD_SET),
@@ -130,7 +132,7 @@ func (p *RedisProtocol) generateSetMessage(key, value string) Protocol {
 func (p *RedisProtocol) getLenStr(str string) string {
 	return marker_len + strconv.Itoa(len(str))
 }
-func (p *RedisProtocol) isError(errMessage string) Protocol {
+func (p *RedisProtocol) isError(errMessage string) protocol.Protocol {
 	p.Error = errors.New(E_Header + errMessage)
 	return p
 }
