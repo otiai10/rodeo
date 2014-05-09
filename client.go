@@ -5,7 +5,9 @@ import "github.com/otiai10/rodeo/protocol"
 
 // type Client
 // convert types of key and value
-// to use (string only) KVS
+// to use (string only) KVS.
+// というか、Clientってexportしなくてよくない？？
+// インターフェースじゃないじゃん。
 type TcpClient struct {
 	Conn    net.Conn
 	Protcol protocol.Protocol
