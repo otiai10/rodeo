@@ -30,11 +30,11 @@ func TheVaquero(conf Conf, args ...string) (v *Vaquero, e error) {
 	return
 }
 
-func (v *Vaquero) Set(key string, val interface{}) (e error) {
-	return
+func (v *Vaquero) Set(key string, val string) (e error) {
+	return v.facade.SetString(key, val)
 }
 func (v *Vaquero) Get(key string) (val string) {
-	return "12345"
+	return v.facade.GetStringAnyway(key)
 }
 func (v *Vaquero) Store(key string, obj interface{}) (e error) {
 	var bs []byte

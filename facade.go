@@ -14,9 +14,10 @@ type pFacade struct {
 }
 
 func (fcd *pFacade) GetStringAnyway(key string) (value string) {
-	value = "12345"
-	return
+	result := fcd.Protcol.Request("GET", key).Execute(fcd.Conn).ToResult()
+	return result.Response
 }
-func (fcd *pFacade) Set(key string, value string) (e error) {
-	return
+func (fcd *pFacade) SetString(key string, value string) (e error) {
+	result := fcd.Protcol.Request("SET", key, value).Execute(fcd.Conn).ToResult()
+	return result.Error
 }
