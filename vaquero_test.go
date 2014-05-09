@@ -1,11 +1,11 @@
 package rodeo_test
 
-import . "github.com/otiai10/rodeo"
+import "github.com/otiai10/rodeo"
 
 import "fmt"
 import "testing"
 
-var conf = Conf{
+var conf = rodeo.Conf{
 	Host: "localhost",
 	Port: "6379",
 }
@@ -16,7 +16,7 @@ type tStruct0 struct {
 
 func TestTheVaquero(t *testing.T) {
 
-	vaquero, e := TheVaquero(conf, "test")
+	vaquero, e := rodeo.TheVaquero(conf, "test")
 
 	if e != nil {
 		fmt.Println(e)
@@ -31,7 +31,7 @@ func TestTheVaquero(t *testing.T) {
 
 func TestVaquero_Set(t *testing.T) {
 
-	vaquero, e := TheVaquero(conf, "test")
+	vaquero, e := rodeo.TheVaquero(conf, "test")
 
 	e = vaquero.Set("mykey", 12345)
 	if e != nil {
@@ -50,7 +50,7 @@ func TestVaquero_Set(t *testing.T) {
 
 func TestVaquero_Store(t *testing.T) {
 
-	vaquero, e := TheVaquero(conf, "test")
+	vaquero, e := rodeo.TheVaquero(conf, "test")
 
 	key0 := "mykey0"
 	obj0 := tStruct0{"Hello, rodeo"}
