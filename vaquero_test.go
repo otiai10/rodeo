@@ -4,9 +4,11 @@ import . "github.com/otiai10/rodeo"
 
 import "fmt"
 import "testing"
-import "github.com/robfig/config"
 
-var conf, _ = config.ReadDefault("sample.conf")
+var conf = Conf{
+	Host: "localhost",
+	Port: "6379",
+}
 
 type tStruct0 struct {
 	Foo string
@@ -70,21 +72,5 @@ func TestVaquero_Store(t *testing.T) {
 		fmt.Println(dest0)
 		t.Fail()
 		return
-	}
-}
-func TestTheVaqueroFail00(t *testing.T) {
-	conf, _ := config.ReadDefault("sample.conf")
-	_, e := TheVaquero(conf, "missing")
-	if e == nil || e.Error() != "option not found: port" {
-		fmt.Println(e)
-		t.Fail()
-	}
-}
-func TestTheVaqueroFail01(t *testing.T) {
-	conf, _ := config.ReadDefault("sample.conf")
-	_, e := TheVaquero(conf, "notfound")
-	if e == nil || e.Error() != "dial tcp: invalid port 99999" {
-		fmt.Println(e)
-		t.Fail()
 	}
 }

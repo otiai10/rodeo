@@ -1,6 +1,5 @@
 package rodeo
 
-import "github.com/robfig/config"
 import "encoding/json"
 
 import "fmt"
@@ -18,49 +17,15 @@ type Conf struct {
 	Port string
 }
 
-func TheVaquero(conf *config.Config, args ...string) (v *Vaquero, e error) {
-	var c Conf
-	c, e = ensureConf(conf, args)
-	if e != nil {
-		return
-	}
+func TheVaquero(conf Conf, args ...string) (v *Vaquero, e error) {
 	var client TcpClient
-	client, e = connect(c.Host, c.Port)
+	client, e = connect(conf.Host, conf.Port)
 	if e != nil {
 		return
 	}
 	v = &Vaquero{
-		c,
+		conf,
 		client,
-	}
-	return
-}
-
-func ensureConf(conf *config.Config, args []string) (c Conf, e error) {
-
-	if len(args) == 0 {
-		return confDefault(conf)
-	}
-	var host, port string
-	host, e = conf.String(args[0], "host")
-	port, e = conf.String(args[0], "port")
-	c = Conf{
-		host,
-		port,
-	}
-	return
-}
-
-func confDefault(conf *config.Config) (c Conf, e error) {
-	var host, port string
-	host, e = conf.String("default", "host")
-	port, e = conf.String("default", "port")
-	if e != nil {
-		return
-	}
-	c = Conf{
-		host,
-		port,
 	}
 	return
 }
