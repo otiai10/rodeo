@@ -1,34 +1,36 @@
 package redis
 
-import "github.com/otiai10/rodeo/protocol"
-
 import "errors"
 import "strings"
 import "fmt"
 import "regexp"
 
-func (p *RedisProtocol) generateGetResponse(res []byte) protocol.Result {
-	result := protocol.Result{}
-	if ok, _ := regexp.Match("\\$.\\r\\n", res); ok {
-		lines := strings.Split(string(res), "\r\n")
-		result.Response = lines[1]
-		return result
-	}
-	result.Response = string(res)
-	result.Error = errors.New(
-		fmt.Sprintf("Response to `Get` is `%v`", string(res)),
-	)
-	return result
+type CommandGet struct {
+	key string
+	CommandDefault
 }
-func (p *RedisProtocol) generateGetMessage(key string) protocol.Protocol {
+
+func (this CommandGet) Build() []byte {
 	words := []string{
 		"*2",
-		p.getLenStr(CMD_GET),
+		this.getLenStr(CMD_GET),
 		CMD_GET,
-		p.getLenStr(key),
-		key,
+		this.getLenStr(this.key),
+		this.key,
 	}
 	joined := strings.Join(words, sep) + sep
-	p.message = []byte(joined)
-	return p
+	return []byte(joined)
+}
+func (this CommandGet) Parse(res []byte) (result string, e error) {
+	// TODO: DO NOT CODE IT HARD
+	if ok, _ := regexp.Match("\\$.\\r\\n", res); ok {
+		lines := strings.Split(string(res), "\r\n")
+		// TODO: validate
+		result = lines[1]
+		return
+	}
+	e = errors.New(
+		fmt.Sprintf("Response to `Get` is `%v`", string(res)),
+	)
+	return
 }

@@ -14,8 +14,18 @@ import "fmt"
 type RedisProtocol struct {
 	message  []byte
 	response []byte
-	Command  string
+	Command  Command
 	Error    error
+}
+
+type Command interface {
+	Build() []byte
+	Parse(res []byte) (string, error)
+}
+type CommandDefault struct{}
+
+func (d CommandDefault) getLenStr(str string) string {
+	return marker_len + strconv.Itoa(len(str))
 }
 
 var (
@@ -37,19 +47,26 @@ func (p *RedisProtocol) Request(args ...string) protocol.Protocol {
 	if lenArgs < 2 {
 		return p.isError("Too short params")
 	}
-	p.Command = args[0]
-	switch p.Command {
-	case CMD_GET:
-		return p.generateGetMessage(args[1])
-	case CMD_SET:
-		if lenArgs < 3 {
-			return p.isError("Too short params for `SET` command")
-		}
-		return p.generateSetMessage(args[1], args[2])
+	command, e := getCommand(args)
+	if e != nil {
+		return p.isError(e.Error())
 	}
-	return p.isError(fmt.Sprintf("Command not found for `%s`", p.Command))
+	p.Command = command
+	return p
+}
+func getCommand(cmds []string) (command Command, e error) {
+	switch cmds[0] {
+	case CMD_GET:
+		return CommandGet{key: cmds[1]}, nil
+	case CMD_SET:
+		return CommandSet{key: cmds[1], value: cmds[2]}, nil
+	}
+	e = errors.New(fmt.Sprintf("Command not found for `%s`", cmds[0]))
+	return
 }
 func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
+
+	message := p.Command.Build()
 
 	if p.Error != nil {
 		return p
@@ -57,7 +74,7 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 
 	tcpConnReader := bufio.NewReaderSize(conn, buf_size)
 
-	fmt.Fprintf(conn, string(p.message))
+	fmt.Fprintf(conn, string(message))
 
 	response := make([]byte, buf_size)
 	_, rerr := tcpConnReader.Read(response)
@@ -70,21 +87,10 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 	return p
 }
 func (p *RedisProtocol) ToResult() (result protocol.Result) {
-	switch p.Command {
-	case CMD_GET:
-		return p.generateGetResponse(p.response)
-	case CMD_SET:
-		return p.generateSetResponse(p.response)
-	}
-	return
-}
-func (p *RedisProtocol) getLenStr(str string) string {
-	return marker_len + strconv.Itoa(len(str))
+	res, _ := p.Command.Parse(p.response)
+	return protocol.Result{Response: res}
 }
 func (p *RedisProtocol) isError(errMessage string) protocol.Protocol {
 	p.Error = errors.New(E_Header + errMessage)
 	return p
-}
-func (p *RedisProtocol) GetMessage() string {
-	return string(p.message)
 }

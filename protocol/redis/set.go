@@ -1,32 +1,34 @@
 package redis
 
-import "github.com/otiai10/rodeo/protocol"
-
 import "errors"
 import "strings"
 import "regexp"
 
-func (p *RedisProtocol) generateSetResponse(res []byte) protocol.Result {
-	result := protocol.Result{}
-	if ok, _ := regexp.Match("\\+OK", res); ok {
-		result.Response = "OK"
-		return result
-	}
-	result.Response = string(res)
-	result.Error = errors.New("Response to `SET` is not OK")
-	return result
+type CommandSet struct {
+	key   string
+	value string
+	CommandDefault
 }
-func (p *RedisProtocol) generateSetMessage(key, value string) protocol.Protocol {
+
+func (this CommandSet) Build() []byte {
 	words := []string{
 		"*3",
-		p.getLenStr(CMD_SET),
+		this.getLenStr(CMD_SET),
 		CMD_SET,
-		p.getLenStr(key),
-		key,
-		p.getLenStr(value),
-		value,
+		this.getLenStr(this.key),
+		this.key,
+		this.getLenStr(this.value),
+		this.value,
 	}
 	joined := strings.Join(words, sep) + sep
-	p.message = []byte(joined)
-	return p
+	return []byte(joined)
+}
+func (this CommandSet) Parse(res []byte) (result string, e error) {
+	// TODO: DO NOT CODE IT HARD
+	if ok, _ := regexp.Match("\\+OK", res); ok {
+		// TODO: validate
+		return "OK", nil
+	}
+	e = errors.New("Response to `SET` is not OK")
+	return
 }
