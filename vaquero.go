@@ -9,7 +9,7 @@ import "fmt"
 // and gives interface to access storage.
 type Vaquero struct {
 	Conf   Conf // should not be exported?
-	client TcpClient
+	facade pFacade
 }
 
 type Conf struct {
@@ -18,14 +18,14 @@ type Conf struct {
 }
 
 func TheVaquero(conf Conf, args ...string) (v *Vaquero, e error) {
-	var client TcpClient
-	client, e = connect(conf.Host, conf.Port)
+	var facade pFacade
+	facade, e = connect(conf.Host, conf.Port)
 	if e != nil {
 		return
 	}
 	v = &Vaquero{
 		conf,
-		client,
+		facade,
 	}
 	return
 }

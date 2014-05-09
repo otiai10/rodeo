@@ -3,20 +3,20 @@ package rodeo
 import "net"
 import "github.com/otiai10/rodeo/protocol"
 
-// type Client
+// type pFacade
 // convert types of key and value
 // to use (string only) KVS.
-// というか、Clientってexportしなくてよくない？？
+// というか、pFacadeってexportしなくてよくない？？
 // インターフェースじゃないじゃん。
-type TcpClient struct {
+type pFacade struct {
 	Conn    net.Conn
 	Protcol protocol.Protocol
 }
 
-func (client *TcpClient) GetStringAnyway(key string) (value string) {
+func (fcd *pFacade) GetStringAnyway(key string) (value string) {
 	value = "12345"
 	return
 }
-func (client *TcpClient) Set(key string, value string) (e error) {
+func (fcd *pFacade) Set(key string, value string) (e error) {
 	return
 }
