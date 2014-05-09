@@ -3,9 +3,9 @@ package rodeo
 import "net"
 import "github.com/otiai10/rodeo/protocol"
 
-// TcpClientって何すんだろう
-// key string, val string のkvsすべてに対応できる
-// Memcachedでも動くように設計する
+// type Client
+// convert types of key and value
+// to use (string only) KVS
 type TcpClient struct {
 	Conn    net.Conn
 	Protcol protocol.Protocol
