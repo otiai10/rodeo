@@ -25,3 +25,9 @@ func main() {
     // *Foo {"bar"}
 }
 ```
+
+# Test
+```sh
+go test
+go test ./protocol/redis
+```
