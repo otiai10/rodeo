@@ -1,12 +1,10 @@
 package rodeo
 
-// import "fmt"
-
 // type `Vaquero`
 // manages configuration and connection,
 // and gives interface to access storage.
 type Vaquero struct {
-	Conf   Conf // should not be exported?
+	Conf   Conf
 	facade pFacade
 }
 
