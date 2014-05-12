@@ -1,5 +1,5 @@
 # rodeo
-"rodeo" is simple [Redis](http://redis.io/) client.
+"rodeo" is a simple [Redis](http://redis.io/) client.
 
 # Usage
 ```go
