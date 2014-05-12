@@ -1,3 +1,10 @@
+# rodeo
+"rodeo" is simple [Redis](http://redis.io/) client.
+
+# can also support
+
+- [memcached](https://github.com/otiai10/rodeo/tree/master/protocol/memcached)
+
 # Usage
 ```go
 package main
@@ -10,6 +17,8 @@ type Foo struct {
 }
 
 func main() {
+
+    conf := rodeo.Conf{"localhost","6379"}
     vaquero := rodeo.TheVaquero(conf)
 
     _ = vaquero.Set("my_key", 12345)
