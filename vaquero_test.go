@@ -76,3 +76,28 @@ func TestVaquero_Store(t *testing.T) {
 	assert(t, "This is Bar", dest1.Foo.Bar)
 	assert(t, 1001, dest1.Foo.Buz)
 }
+
+func TestVaquero_PubSub(t *testing.T) {
+
+	fin := make(chan string)
+
+	vaqueroA, _ := rodeo.TheVaquero(conf, "test")
+	vaqueroB, _ := rodeo.TheVaquero(conf, "test")
+
+	subscriber := vaqueroA.Sub("mychan")
+
+	go func() {
+		for {
+			message := <-subscriber
+			fin <- message
+		}
+	}()
+
+	_ = vaqueroB.Pub("mychan", "Hi, this is VaqueroB")
+
+	for {
+		result := <-fin
+		assert(t, "Hi, this is VaqueroB", result)
+		return
+	}
+}

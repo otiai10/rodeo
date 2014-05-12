@@ -26,6 +26,8 @@ func TheVaquero(conf Conf, args ...string) (v *Vaquero, e error) {
 	return
 }
 
+var chanRegistry = make(map[string]chan string)
+
 func (v *Vaquero) Set(key string, val string) (e error) {
 	return v.facade.SetString(key, val)
 }
@@ -37,4 +39,14 @@ func (v *Vaquero) Store(key string, obj interface{}) (e error) {
 }
 func (v *Vaquero) Cast(key string, dest interface{}) (e error) {
 	return v.facade.GetStruct(key, dest)
+}
+
+func (v *Vaquero) Sub(chanName string) (ch chan string) {
+	ch = make(chan string)
+	chanRegistry[chanName] = ch
+	return
+}
+func (v *Vaquero) Pub(chanName string, message string) (e error) {
+	chanRegistry[chanName] <- message
+	return
 }
