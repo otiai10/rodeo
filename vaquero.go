@@ -2,7 +2,7 @@ package rodeo
 
 import "encoding/json"
 
-import "fmt"
+// import "fmt"
 
 // type `Vaquero`
 // manages configuration and connection,
@@ -37,10 +37,10 @@ func (v *Vaquero) Get(key string) (val string) {
 	return v.facade.GetStringAnyway(key)
 }
 func (v *Vaquero) Store(key string, obj interface{}) (e error) {
-	var bs []byte
-	bs, e = json.Marshal(obj)
+	// var bs []byte
+	// bs, e = json.Marshal(obj)
 	// debug
-	fmt.Printf("%T > %v\n", string(bs), string(bs))
+	// fmt.Printf("%T > %v\n", string(bs), string(bs))
 	return
 }
 func (v *Vaquero) Cast(key string, dest interface{}) (e error) {
