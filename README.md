@@ -1,10 +1,6 @@
 # rodeo
 "rodeo" is simple [Redis](http://redis.io/) client.
 
-# can also support
-
-- [memcached](https://github.com/otiai10/rodeo/tree/master/protocol/memcached)
-
 # Usage
 ```go
 package main
@@ -40,3 +36,8 @@ func main() {
 go test
 go test ./protocol/redis
 ```
+
+# can also support
+
+- [memcached](https://github.com/otiai10/rodeo/tree/master/protocol/memcached)
+
