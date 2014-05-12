@@ -2,6 +2,7 @@ package rodeo
 
 import "net"
 import "github.com/otiai10/rodeo/protocol"
+import "encoding/json"
 
 // type pFacade
 // convert types of key and value
@@ -19,5 +20,19 @@ func (fcd *pFacade) GetStringAnyway(key string) (value string) {
 }
 func (fcd *pFacade) SetString(key string, value string) (e error) {
 	result := fcd.Protcol.Request("SET", key, value).Execute(fcd.Conn).ToResult()
+	return result.Error
+}
+func (fcd *pFacade) GetStruct(key string, dest interface{}) (e error) {
+	result := fcd.Protcol.Request("GET", key).Execute(fcd.Conn).ToResult()
+	e = json.Unmarshal([]byte(result.Response), dest)
+	return e
+}
+func (fcd *pFacade) SetStruct(key string, obj interface{}) (e error) {
+	var bs []byte
+	bs, e = json.Marshal(obj)
+	if e != nil {
+		return
+	}
+	result := fcd.Protcol.Request("SET", key, string(bs)).Execute(fcd.Conn).ToResult()
 	return result.Error
 }

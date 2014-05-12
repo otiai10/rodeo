@@ -13,6 +13,13 @@ var conf = rodeo.Conf{
 type tStruct0 struct {
 	Foo string
 }
+type tStruct1 struct {
+	Foo Foo
+}
+type Foo struct {
+	Bar string
+	Buz int
+}
 
 func assert(t *testing.T, actual interface{}, expected interface{}) {
 	if expected != actual {
@@ -24,16 +31,8 @@ func assert(t *testing.T, actual interface{}, expected interface{}) {
 func TestTheVaquero(t *testing.T) {
 
 	vaquero, e := rodeo.TheVaquero(conf, "test")
-
-	if e != nil {
-		fmt.Println(e)
-		t.Fail()
-		return
-	}
-	if vaquero.Conf.Port != "6379" {
-		t.Fail()
-		return
-	}
+	assert(t, nil, e)
+	assert(t, "6379", vaquero.Conf.Port)
 }
 
 func TestVaquero_Set(t *testing.T) {
@@ -41,18 +40,9 @@ func TestVaquero_Set(t *testing.T) {
 	vaquero, e := rodeo.TheVaquero(conf, "test")
 
 	e = vaquero.Set("mykey", "12345")
-	if e != nil {
-		fmt.Printf("E?? %+v", e)
-		t.Fail()
-		return
-	}
-
+	assert(t, nil, e)
 	val := vaquero.Get("mykey")
-	if val != "12345" {
-		fmt.Printf("val?? %+v", val)
-		t.Fail()
-		return
-	}
+	assert(t, "12345", val)
 
 	e = vaquero.Set("mykey", "67890")
 	assert(t, e, nil)
@@ -68,22 +58,21 @@ func TestVaquero_Store(t *testing.T) {
 	key0 := "mykey0"
 	obj0 := tStruct0{"Hello, rodeo"}
 	e = vaquero.Store(key0, obj0)
-	if e != nil {
-		fmt.Println(e)
-		t.Fail()
-		return
-	}
+	assert(t, nil, e)
 
 	var dest0 tStruct0
 	e = vaquero.Cast(key0, &dest0)
-	if e != nil {
-		fmt.Println(e)
-		t.Fail()
-		return
-	}
-	if dest0.Foo != "Hello, rodeo" {
-		fmt.Println(dest0)
-		t.Fail()
-		return
-	}
+	assert(t, nil, e)
+	assert(t, "Hello, rodeo", dest0.Foo)
+
+	key1 := "mykey1"
+	obj1 := tStruct1{Foo: Foo{Bar: "This is Bar", Buz: 1001}}
+	e = vaquero.Store(key1, obj1)
+	assert(t, nil, e)
+
+	var dest1 tStruct1
+	e = vaquero.Cast(key1, &dest1)
+	assert(t, nil, e)
+	assert(t, "This is Bar", dest1.Foo.Bar)
+	assert(t, 1001, dest1.Foo.Buz)
 }

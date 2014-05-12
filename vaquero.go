@@ -1,7 +1,5 @@
 package rodeo
 
-import "encoding/json"
-
 // import "fmt"
 
 // type `Vaquero`
@@ -37,12 +35,8 @@ func (v *Vaquero) Get(key string) (val string) {
 	return v.facade.GetStringAnyway(key)
 }
 func (v *Vaquero) Store(key string, obj interface{}) (e error) {
-	// var bs []byte
-	// bs, e = json.Marshal(obj)
-	// debug
-	// fmt.Printf("%T > %v\n", string(bs), string(bs))
-	return
+	return v.facade.SetStruct(key, obj)
 }
 func (v *Vaquero) Cast(key string, dest interface{}) (e error) {
-	return json.Unmarshal([]byte("{\"Foo\":\"Hello, rodeo\"}"), dest)
+	return v.facade.GetStruct(key, dest)
 }

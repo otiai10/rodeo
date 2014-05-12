@@ -23,7 +23,7 @@ func (this CommandGet) Build() []byte {
 }
 func (this CommandGet) Parse(res []byte) (result string, e error) {
 	// TODO: DO NOT CODE IT HARD
-	if ok, _ := regexp.Match("\\$.\\r\\n", res); ok {
+	if ok, _ := regexp.Match("\\$.+\\r\\n", res); ok {
 		lines := strings.Split(string(res), "\r\n")
 		// TODO: validate
 		result = lines[1]
