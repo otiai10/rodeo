@@ -44,9 +44,11 @@ func (v *Vaquero) Cast(key string, dest interface{}) (e error) {
 func (v *Vaquero) Sub(chanName string) (ch chan string) {
 	ch = make(chan string)
 	chanRegistry[chanName] = ch
+	v.facade.Listen(&ch)
 	return
 }
 func (v *Vaquero) Pub(chanName string, message string) (e error) {
-	chanRegistry[chanName] <- message
+	ch := chanRegistry[chanName]
+	v.facade.Message(&ch, message)
 	return
 }

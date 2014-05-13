@@ -36,3 +36,21 @@ func (fcd *pFacade) SetStruct(key string, obj interface{}) (e error) {
 	result := fcd.Protcol.Request("SET", key, string(bs)).Execute(fcd.Conn).ToResult()
 	return result.Error
 }
+func (fcd *pFacade) Listen(ch *chan string) {
+	// TODO: Protcol経由で、tcpをReadするgoroutineをつくる
+	// Readすべきものが発生したら、それをparseして
+	// chに流し込む
+	/*
+	   go func(){
+	       for {
+	           time.Sleep(5 * time.Second)
+	           println("001")
+	           *ch<- "これはredisから来たメッセージ想定"
+	           println("002")
+	       }
+	   }()
+	*/
+}
+func (fcd *pFacade) Message(ch *chan string, mess string) {
+	*ch <- mess
+}

@@ -4,6 +4,7 @@ import "github.com/otiai10/rodeo"
 
 import "fmt"
 import "testing"
+import "time"
 
 var conf = rodeo.Conf{
 	Host: "localhost",
@@ -93,6 +94,7 @@ func TestVaquero_PubSub(t *testing.T) {
 		}
 	}()
 
+	time.Sleep(3 * time.Second)
 	_ = vaqueroB.Pub("mychan", "Hi, this is VaqueroB")
 
 	for {
