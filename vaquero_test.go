@@ -4,7 +4,6 @@ import "github.com/otiai10/rodeo"
 
 import "fmt"
 import "testing"
-import "time"
 
 var conf = rodeo.Conf{
 	Host: "localhost",
@@ -83,23 +82,30 @@ func TestVaquero_PubSub(t *testing.T) {
 	fin := make(chan string)
 
 	vaqueroA, _ := rodeo.TheVaquero(conf, "test")
-	vaqueroB, _ := rodeo.TheVaquero(conf, "test")
+	// vaqueroB, _ := rodeo.TheVaquero(conf, "test")
 
 	subscriber := vaqueroA.Sub("mychan")
 
 	go func() {
 		for {
 			message := <-subscriber
+			println("テスト、っつーかメイン")
+			println(message)
 			fin <- message
+			continue
 		}
 	}()
 
-	time.Sleep(3 * time.Second)
-	_ = vaqueroB.Pub("mychan", "Hi, this is VaqueroB")
+	/*
+		time.Sleep(3 * time.Second)
+		_ = vaqueroB.Pub("mychan", "Hi, this is VaqueroB")
+	*/
 
 	for {
+		println("ちゃんとfin聞いてる？")
 		result := <-fin
-		assert(t, "Hi, this is VaqueroB", result)
+		println("finから", result)
+		assert(t, result, "Hi, this is VaqueroB")
 		return
 	}
 }

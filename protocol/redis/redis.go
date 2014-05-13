@@ -35,8 +35,9 @@ var (
 	buf_size   = 1024
 )
 var (
-	CMD_GET = "GET"
-	CMD_SET = "SET"
+	CMD_GET       = "GET"
+	CMD_SET       = "SET"
+	CMD_SUBSCRIBE = "SUBSCRIBE"
 )
 var (
 	E_Header = "RedisProtocol: "
@@ -60,6 +61,8 @@ func getCommand(cmds []string) (command Command, e error) {
 		return CommandGet{key: cmds[1]}, nil
 	case CMD_SET:
 		return CommandSet{key: cmds[1], value: cmds[2]}, nil
+	case CMD_SUBSCRIBE:
+		return CommandSubscribe{chanName: cmds[1]}, nil
 	}
 	e = errors.New(fmt.Sprintf("Command not found for `%s`", cmds[0]))
 	return
@@ -85,6 +88,29 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 
 	p.response = response
 	return p
+}
+func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
+
+	message := p.Command.Build()
+
+	tcpConnReader := bufio.NewReaderSize(conn, buf_size)
+
+	go func() {
+		fmt.Fprintf(conn, string(message))
+		response := make([]byte, buf_size)
+		for {
+			_, _ = tcpConnReader.Read(response)
+			res, e := p.Command.Parse(response)
+
+			fmt.Println("帰ってきたres", res, e)
+			if e != nil {
+				continue
+			}
+			*reciever <- res
+			println("ブレイクしちゃってんの？")
+		}
+		println("そと")
+	}()
 }
 func (p *RedisProtocol) ToResult() (result protocol.Result) {
 	res, _ := p.Command.Parse(p.response)

@@ -36,7 +36,8 @@ func (fcd *pFacade) SetStruct(key string, obj interface{}) (e error) {
 	result := fcd.Protcol.Request("SET", key, string(bs)).Execute(fcd.Conn).ToResult()
 	return result.Error
 }
-func (fcd *pFacade) Listen(ch *chan string) {
+func (fcd *pFacade) Listen(chanName string, ch *chan string) {
+	fcd.Protcol.Request("SUBSCRIBE", chanName).WaitFor(fcd.Conn, ch)
 	// TODO: Protcol経由で、tcpをReadするgoroutineをつくる
 	// Readすべきものが発生したら、それをparseして
 	// chに流し込む
