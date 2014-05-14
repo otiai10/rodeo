@@ -47,7 +47,6 @@ func (v *Vaquero) Sub(chanName string) (ch chan string) {
 	return
 }
 func (v *Vaquero) Pub(chanName string, message string) (e error) {
-	ch := chanRegistry[chanName]
-	v.facade.Message(&ch, message)
+	v.facade.Message(chanName, message)
 	return
 }

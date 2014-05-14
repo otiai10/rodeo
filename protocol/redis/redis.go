@@ -38,6 +38,7 @@ var (
 	CMD_GET       = "GET"
 	CMD_SET       = "SET"
 	CMD_SUBSCRIBE = "SUBSCRIBE"
+	CMD_PUBLISH   = "PUBLISH"
 )
 var (
 	E_Header = "RedisProtocol: "
@@ -63,6 +64,8 @@ func getCommand(cmds []string) (command Command, e error) {
 		return CommandSet{key: cmds[1], value: cmds[2]}, nil
 	case CMD_SUBSCRIBE:
 		return CommandSubscribe{chanName: cmds[1]}, nil
+	case CMD_PUBLISH:
+		return CommandPublish{chanName: cmds[1], message: cmds[2]}, nil
 	}
 	e = errors.New(fmt.Sprintf("Command not found for `%s`", cmds[0]))
 	return
@@ -102,14 +105,11 @@ func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 			_, _ = tcpConnReader.Read(response)
 			res, e := p.Command.Parse(response)
 
-			fmt.Println("帰ってきたres", res, e)
 			if e != nil {
 				continue
 			}
 			*reciever <- res
-			println("ブレイクしちゃってんの？")
 		}
-		println("そと")
 	}()
 }
 func (p *RedisProtocol) ToResult() (result protocol.Result) {

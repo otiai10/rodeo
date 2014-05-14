@@ -38,20 +38,7 @@ func (fcd *pFacade) SetStruct(key string, obj interface{}) (e error) {
 }
 func (fcd *pFacade) Listen(chanName string, ch *chan string) {
 	fcd.Protcol.Request("SUBSCRIBE", chanName).WaitFor(fcd.Conn, ch)
-	// TODO: Protcol経由で、tcpをReadするgoroutineをつくる
-	// Readすべきものが発生したら、それをparseして
-	// chに流し込む
-	/*
-	   go func(){
-	       for {
-	           time.Sleep(5 * time.Second)
-	           println("001")
-	           *ch<- "これはredisから来たメッセージ想定"
-	           println("002")
-	       }
-	   }()
-	*/
 }
-func (fcd *pFacade) Message(ch *chan string, mess string) {
-	*ch <- mess
+func (fcd *pFacade) Message(chanName, mess string) {
+	fcd.Protcol.Request("PUBLISH", chanName, mess).Execute(fcd.Conn)
 }
