@@ -25,7 +25,7 @@ func main() {
     foo := Foo{"bar"}
     _ = vaquero.Store("my_foo", foo)
     var buz Foo
-    _ = vaquero.Cast("my_foo", buz)
+    _ = vaquero.Cast("my_foo", &buz)
     // *Foo {"bar"}
 
     // Pub & Sub
