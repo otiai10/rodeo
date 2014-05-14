@@ -14,20 +14,26 @@ type Foo struct {
 
 func main() {
 
-    conf := rodeo.Conf{"localhost","6379"}
-    vaquero := rodeo.TheVaquero(conf)
+    vaquero := rodeo.TheVaquero(rodeo.Conf{"localhost","6379"})
 
-    _ = vaquero.Set("my_key", 12345)
-    val, _ := vaquero.Get("my_key")
-    fmt.Pritnf("%T %v", val, val)
-    // string 12345
+    // Set & Get
+    _ = vaquero.Set("my_key", "12345")
+    val := vaquero.Get("my_key")
+    // string "12345"
 
+    // Store & Cast
     foo := Foo{"bar"}
-    _ = vaquero.Set("my_foo", foo, Foo)
-    baz := &Foo{}
-    _ = vaquero.Cast("my_foo", baz)
-    fmt.Pritnf("%T %v", baz, baz)
+    _ = vaquero.Store("my_foo", foo)
+    var buz Foo
+    _ = vaquero.Cast("my_foo", buz)
     // *Foo {"bar"}
+
+    // Pub & Sub
+    go func(){
+        mess := <-vaquero.Sub("mychan")
+        // "Hello, pub/sub!!"
+    }
+    vaquero.Pub("mychan", "Hello, pub/sub!!")
 }
 ```
 
