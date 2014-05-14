@@ -1,6 +1,8 @@
-# memcached
+# Memcached
 
-Memcached protocol container for [rodeo](https://github.com/otiai10/rodeo).
+[Memcached](http://memcached.org/) protocol container for [rodeo](https://github.com/otiai10/rodeo).
+
+![Memcached](https://pbs.twimg.com/media/BnlHrRSIUAEwSXe.jpg)
 
 # Available commands
 

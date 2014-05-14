@@ -1,6 +1,8 @@
-# memcached
+# Redis
 
-Redis protocol container for [rodeo](https://github.com/otiai10/rodeo).
+[Redis](http://redis.io/) container for [rodeo](https://github.com/otiai10/rodeo).
+
+![redis](https://pbs.twimg.com/media/BnlH7vlIQAAbv9Q.png)
 
 # Available commands
 
