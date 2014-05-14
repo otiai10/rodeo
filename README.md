@@ -33,8 +33,7 @@ func main() {
 
 # Test
 ```sh
-go test
-go test ./protocol/redis
+go test ./...
 ```
 
 # can also support
