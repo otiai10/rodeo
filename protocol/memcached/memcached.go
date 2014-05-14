@@ -85,6 +85,8 @@ func (p *MemcachedProtocol) Execute(conn net.Conn) protocol.Protocol {
 	p.response = response
 	return p
 }
+func (p *MemcachedProtocol) WaitFor(conn net.Conn, reciever *chan string) {
+}
 func (p *MemcachedProtocol) ToResult() (result protocol.Result) {
 	res, _ := p.Command.Parse(p.response)
 	return protocol.Result{Response: res}
