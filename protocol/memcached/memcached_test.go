@@ -5,23 +5,28 @@ import "github.com/otiai10/rodeo/protocol/memcached"
 import "testing"
 import "reflect"
 import "fmt"
-
+import "os"
 import "net"
+
+func assert(t *testing.T, actual interface{}, expected interface{}) {
+	if expected != actual {
+		fmt.Printf("`%+v` expected, but `%+v` actual.\n", expected, actual)
+		t.Fail()
+		os.Exit(1)
+	}
+}
 
 func TestMemcachedProtocol(t *testing.T) {
 
 	memcachedProtocol := memcached.MemcachedProtocol{}
 
-	if reflect.TypeOf(memcachedProtocol).String() != "memcached.MemcachedProtocol" {
-		fmt.Println("TypeError: ", reflect.TypeOf(memcachedProtocol).String())
-		t.Fail()
-		return
-	}
+	assert(t, reflect.TypeOf(memcachedProtocol).String(), "memcached.MemcachedProtocol")
 }
 
 func TestMemcachedProtocol_Execute(t *testing.T) {
 
-	conn, _ := net.Dial("tcp", "localhost:11211")
+	conn, e := net.Dial("tcp", "localhost:11211")
+	assert(t, e, nil)
 
 	var memcachedProtocol memcached.MemcachedProtocol
 	memcachedProtocol = memcached.MemcachedProtocol{}

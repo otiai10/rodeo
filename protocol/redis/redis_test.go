@@ -5,23 +5,28 @@ import "github.com/otiai10/rodeo/protocol/redis"
 import "testing"
 import "reflect"
 import "fmt"
-
+import "os"
 import "net"
+
+func assert(t *testing.T, actual interface{}, expected interface{}) {
+	if expected != actual {
+		fmt.Printf("`%+v` expected, but `%+v` actual.\n", expected, actual)
+		t.Fail()
+		os.Exit(1)
+	}
+}
 
 func TestRedisProtocol(t *testing.T) {
 
 	redisProtocol := redis.RedisProtocol{}
 
-	if reflect.TypeOf(redisProtocol).String() != "redis.RedisProtocol" {
-		fmt.Println("TypeError: ", reflect.TypeOf(redisProtocol).String())
-		t.Fail()
-		return
-	}
+	assert(t, reflect.TypeOf(redisProtocol).String(), "redis.RedisProtocol")
 }
 
 func TestRedisProtocol_Execute(t *testing.T) {
 
-	conn, _ := net.Dial("tcp", "localhost:6379")
+	conn, e := net.Dial("tcp", "localhost:6379")
+	assert(t, e, nil)
 
 	var redisProtocol redis.RedisProtocol
 	redisProtocol = redis.RedisProtocol{}
