@@ -5,7 +5,6 @@
 ```go
 package main
 
-import "fmt"
 import "github.com/otiai10/rodeo"
 
 type Foo struct {
