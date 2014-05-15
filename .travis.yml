@@ -1,0 +1,16 @@
+language: go
+
+go:
+    - 1.2
+    - tip
+
+services:
+    - redis-server
+
+env:
+    - TEST_REDIS_ADDRESSES=localhost:6379 TEST_REDIS_WAIT_DURATION=10s
+
+before_script:
+
+script:
+    - go test -v ./...
