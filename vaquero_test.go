@@ -99,11 +99,26 @@ func TestVaquero_PubSub(t *testing.T) {
 	}()
 
 	time.Sleep(1 * time.Second)
-	_ = vaqueroB.Pub("mychan", "Hi, this is VaqueroB")
+	_ = vaqueroB.Pub("mychan", "Hi, this is VaqueroB 000")
+	time.Sleep(1 * time.Second)
+	_ = vaqueroB.Pub("mychan", "Hi, this is VaqueroB 001")
+	time.Sleep(1 * time.Second)
+	_ = vaqueroB.Pub("mychan", "Hi, this is VaqueroB 002")
 
+	var count int
 	for {
 		result := <-fin
-		assert(t, result, "Hi, this is VaqueroB")
-		return
+		switch count {
+		case 0:
+			assert(t, result, "Hi, this is VaqueroB 000")
+			break
+		case 1:
+			assert(t, result, "Hi, this is VaqueroB 001")
+			break
+		case 2:
+			assert(t, result, "Hi, this is VaqueroB 002")
+			return
+		}
+		count++
 	}
 }
