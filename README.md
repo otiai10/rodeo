@@ -1,6 +1,8 @@
 # rodeo
 "rodeo" is a simple [Redis](http://redis.io/) client for golang
 
+[![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo)
+
 # Usage
 ```go
 package main
