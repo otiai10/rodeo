@@ -6,9 +6,11 @@ go:
 
 services:
     - redis-server
+    - memcached
 
 env:
-    - TEST_REDIS_ADDRESSES=localhost:6379 TEST_REDIS_WAIT_DURATION=10s
+    - TEST_REDIS_ADDRESSES=localhost:6379 TEST_REDIS_WAIT_DURATION=2s
+    - TEST_MEMCACHED_ADDRESSES=localhost:11211 TEST_REDIS_WAIT_DURATION=2s
 
 before_script:
 
