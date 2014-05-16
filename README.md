@@ -47,6 +47,29 @@ go func(){
 vaqueroB := rodeo.TheVaquero(conf)
 _ = vaqueroB.Pub("mychan", "Hi, this is vaqueroB")
 ```
+## Tame
+can provide active model for 'RANGE' and 'ZRANGE' of Redis
+```go
+type Member struct {
+    Name string
+    Age int
+}
+john := Member{"John",29}
+paul := Member{"Paul",31}
+george := Member{"George",28}
+
+vaquero := rodeo.TheVaquero(conf)
+members := vaquero.Tame(rodo.Z, "members", Member)
+
+members.Push(john)
+members.Unshift(paul)
+members.Insert(1001, george) // ZRANGE only
+
+mem000 := members.Pop()
+// George
+mems := members.Range(0, -1)
+// Paul, John
+```
 
 
 # Test
