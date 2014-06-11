@@ -6,40 +6,51 @@
 
 [![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo)
 
-# Usage
+# API Samples
+## Set & Get
+can set and get strings by keys.
 ```go
-package main
+vaquero, _ := rodeo.TheVaquero(rodeo.Conf{"localhost","6379"})
 
-import "github.com/otiai10/rodeo"
+// Set
+_ = vaquero.Set("my_key", "12345")
 
-type Foo struct {
-    Bar string
-}
-
-func main() {
-
-    vaquero, _ := rodeo.TheVaquero(rodeo.Conf{"localhost","6379"})
-
-    // Set & Get
-    _ = vaquero.Set("my_key", "12345")
-    val := vaquero.Get("my_key")
-    // string "12345"
-
-    // Store & Cast
-    foo := Foo{"bar"}
-    _ = vaquero.Store("my_foo", foo)
-    var buz Foo
-    _ = vaquero.Cast("my_foo", &buz)
-    // *Foo {"bar"}
-
-    // Pub & Sub
-    go func(){
-        mess := <-vaquero.Sub("mychan")
-        // "Hello, pub/sub!!"
-    }
-    vaquero.Pub("mychan", "Hello, pub/sub!!")
-}
+// Get
+val := vaquero.Get("my_key")
+// string "12345"
 ```
+## Store & Cast
+can set and get objects by keys.
+```go
+type Sample struct {
+    Foo string
+}
+
+vaquero, _ := rodeo.TheVaquero(conf)
+
+// Store
+obj := Sample{"this is foo"}
+_ = vaquero.Store("my_key", obj)
+
+// Cast
+var dest Sample
+_ = vaquero.Cast("my_key", &dest)
+// *Sample{"this is foo"}
+```
+## Pub & Sub
+```go
+vaqueroA, _ := rodeo.TheVaquero(conf)
+go func(){
+    for {
+        message := <-vaqueroA.Sub("mychan")
+        // Hi, this is vaqueroB
+    }
+}()
+
+vaqueroB, _ := rodeo.TheVaquero(conf)
+_ = vaqueroB.Pub("mychan", "Hi, this is vaqueroB")
+```
+
 
 # Test
 ```sh
