@@ -1,5 +1,8 @@
 # rodeo
-"rodeo" is a simple [Redis](http://redis.io/) client for golang
+
+"rodeo" is a simple simple [Redis](http://redis.io/) client for Go.
+
+![rodeo](https://cloud.githubusercontent.com/assets/931554/3240193/73767b3a-f120-11e3-8fea-2ea46ab55cc6.png)
 
 [![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo)
 
@@ -15,7 +18,7 @@ type Foo struct {
 
 func main() {
 
-    vaquero := rodeo.TheVaquero(rodeo.Conf{"localhost","6379"})
+    vaquero, _ := rodeo.TheVaquero(rodeo.Conf{"localhost","6379"})
 
     // Set & Get
     _ = vaquero.Set("my_key", "12345")
