@@ -1,6 +1,6 @@
 # rodeo
 
-"rodeo" is a simple simple [Redis](http://redis.io/) client for Go.
+"rodeo" is a simple [Redis](http://redis.io/) client for Go.
 
 ![rodeo](https://cloud.githubusercontent.com/assets/931554/3240193/73767b3a-f120-11e3-8fea-2ea46ab55cc6.png)
 
