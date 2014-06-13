@@ -8,5 +8,6 @@
 
 - [SET](http://redis.io/commands/set)
 - [GET](http://redis.io/commands/get)
+- [DEL](http://redis.io/commands/del)
 - [PUBLISH](http://redis.io/commands/publish)
 - [SUBSCRIBE](http://redis.io/commands/subscribe)

@@ -34,6 +34,9 @@ func (v *Vaquero) Set(key string, val string) (e error) {
 func (v *Vaquero) Get(key string) (val string) {
 	return v.facade.GetStringAnyway(key)
 }
+func (v *Vaquero) Delete(key string) (e error) {
+	return v.facade.DeleteKey(key)
+}
 func (v *Vaquero) Store(key string, obj interface{}) (e error) {
 	return v.facade.SetStruct(key, obj)
 }

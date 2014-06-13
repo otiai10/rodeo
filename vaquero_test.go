@@ -43,6 +43,12 @@ func TestVaquero_Set(t *testing.T) {
 
 	val = vaquero.Get("mykey")
 	Expect(t, val).ToBe("67890")
+
+	e = vaquero.Delete("mykey")
+	Expect(t, e).ToBe(nil)
+
+	val = vaquero.Get("mykey")
+	Expect(t, val).ToBe("")
 }
 
 func TestVaquero_Store(t *testing.T) {
