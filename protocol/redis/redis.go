@@ -31,12 +31,14 @@ func (d CommandDefault) getLenStr(str string) string {
 var (
 	marker_len = "$"
 	marker_ss  = "+"
+	non_exists = "$-1"
 	sep        = "\r\n"
 	buf_size   = 1024
 )
 var (
 	CMD_GET       = "GET"
 	CMD_SET       = "SET"
+	CMD_DEL       = "DEL"
 	CMD_SUBSCRIBE = "SUBSCRIBE"
 	CMD_PUBLISH   = "PUBLISH"
 )
@@ -62,6 +64,8 @@ func getCommand(cmds []string) (command Command, e error) {
 		return CommandGet{key: cmds[1]}, nil
 	case CMD_SET:
 		return CommandSet{key: cmds[1], value: cmds[2]}, nil
+	case CMD_DEL:
+		return CommandDel{key: cmds[1]}, nil
 	case CMD_SUBSCRIBE:
 		return CommandSubscribe{chanName: cmds[1]}, nil
 	case CMD_PUBLISH:

@@ -26,6 +26,9 @@ func TestRedisProtocol_Execute(t *testing.T) {
 
 	_ = redisProtocol.Request("GET", "mykey").Execute(conn)
 	Expect(t, redisProtocol.Error).ToBe(nil)
+
+	_ = redisProtocol.Request("DEL", "mykey").Execute(conn)
+	Expect(t, redisProtocol.Error).ToBe(nil)
 }
 func TestRedisProtocol_ToResult(t *testing.T) {
 
