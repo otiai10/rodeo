@@ -51,29 +51,37 @@ vaqueroB, _ := rodeo.TheVaquero(conf)
 _ = vaqueroB.Pub("mychan", "Hi, this is vaqueroB")
 ```
 ## Tame
-can provide active model for 'RANGE' and 'ZRANGE' of Redis
+can provide active model for Sorted Sets of Redis.
 ```go
 type Member struct {
     Name string
-    Age int
 }
-john := Member{"John",29}
-paul := Member{"Paul",31}
-george := Member{"George",28}
 
-vaquero := rodeo.TheVaquero(conf)
-members := vaquero.Tame(rodo.Z, "members", Member)
+vaquero, _ := rodeo.TheVaquero(conf)
+members := vaquero.Tame("members")
 
-members.Push(john)
-members.Unshift(paul)
-members.Insert(1001, george) // ZRANGE only
+members.Count() // 0
+members.Range().([]Member) // []
 
-mem000 := members.Pop()
-// George
-mems := members.Range(0, -1)
-// Paul, John
+members.Add(1020, Member{"John"})
+members.Add(1001, Member{"Paul"})
+members.Add(1012, Member{"Ringo"})
+members.Add(1100, Member{"George"})
+
+// ZRANGE members -inf +inf
+members.Range().([]Member) // []Member{{"Paul"},{"Ringo"},{"John"},{"George"}}
+
+// ZRANGE members 2 3
+offset, limit := 2, 1
+members.Range(offset, limit).([]Member) // []Member{{"John"}}
+
+// COUNT members -inf +inf
+members.Count() // 4
+
+// ZRANGEBYSCORE members 1000 1100
+start, end = 1000, 1100
+members.Find(start, end).([]Member) // []Member{{"Paul"},{"Ringo"},{"John"}}
 ```
-
 
 # Test
 ```sh

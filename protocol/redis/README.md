@@ -9,5 +9,7 @@
 - [SET](http://redis.io/commands/set)
 - [GET](http://redis.io/commands/get)
 - [DEL](http://redis.io/commands/del)
+- [ZADD](http://redis.io/commands/zadd)
+- [ZCOUNT](http://redis.io/commands/zcount)
 - [PUBLISH](http://redis.io/commands/publish)
 - [SUBSCRIBE](http://redis.io/commands/subscribe)
