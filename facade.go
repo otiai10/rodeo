@@ -22,6 +22,10 @@ func (fcd *pFacade) SetString(key string, value string) (e error) {
 	result := fcd.Protcol.Request("SET", key, value).Execute(fcd.Conn).ToResult()
 	return result.Error
 }
+func (fcd *pFacade) DeleteKey(key string) (e error) {
+	result := fcd.Protcol.Request("DEL", key).Execute(fcd.Conn).ToResult()
+	return result.Error
+}
 func (fcd *pFacade) GetStruct(key string, dest interface{}) (e error) {
 	result := fcd.Protcol.Request("GET", key).Execute(fcd.Conn).ToResult()
 	e = json.Unmarshal([]byte(result.Response), dest)
