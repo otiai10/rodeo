@@ -41,6 +41,6 @@ type Element struct {
 func (el *Element) Score() int64 {
 	return el.score
 }
-func (el *Element) Interface() interface{} {
+func (el *Element) Retrieve() interface{} {
 	return el.v
 }
