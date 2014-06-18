@@ -16,7 +16,7 @@ type Group struct {
 }
 
 func (gr *Group) Add(score int64, v interface{}) (e error) {
-	// TODO: vlidate type of v to equal representative
+	// TODO: validate type of v to equal representative
 	gr.elements = append(gr.elements, Element{v, score})
 	return
 }
