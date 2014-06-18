@@ -76,6 +76,10 @@ func getCommand(cmds []string) (command Command, e error) {
 }
 func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 
+	if p.Error != nil {
+		return p
+	}
+
 	message := p.Command.Build()
 
 	if p.Error != nil {
@@ -117,6 +121,9 @@ func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 	}()
 }
 func (p *RedisProtocol) ToResult() (result protocol.Result) {
+	if p.Error != nil {
+		return protocol.Result{Error: p.Error}
+	}
 	res, _ := p.Command.Parse(p.response)
 	return protocol.Result{Response: res}
 }
