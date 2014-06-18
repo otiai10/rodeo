@@ -4,6 +4,9 @@ import "fmt"
 
 func (vaq *Vaquero) Tame(dataName string, representative interface{}) (gr *Group, e error) {
 	// TODO: delegate connection of Vaquero to Group
+	gr = &Group{
+		representative: representative,
+	}
 	return
 }
 
@@ -25,6 +28,9 @@ func (gr *Group) Find(i int) (el Element, e error) {
 	}
 	el = gr.elements[i]
 	return
+}
+func (gr *Group) Count() int {
+	return len(gr.elements)
 }
 
 type Element struct {

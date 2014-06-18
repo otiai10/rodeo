@@ -130,7 +130,13 @@ func (u *User) Greet() string {
 }
 func TestVaquero_Tame(t *testing.T) {
 	vaquero, _ := rodeo.TheVaquero(conf, "test")
+
+	// truncate
+	vaquero.Delete("test.users")
+
 	users, e := vaquero.Tame("test.users", &User{})
 	Expect(t, e).ToBe(nil)
 	Expect(t, users).TypeOf("*rodeo.Group")
+
+	Expect(t, users.Count()).ToBe(0)
 }
