@@ -5,6 +5,7 @@ import "github.com/otiai10/rodeo"
 import . "github.com/otiai10/mint"
 import "testing"
 import "time"
+import "fmt"
 
 var conf = rodeo.Conf{
 	Host: "localhost",
@@ -117,4 +118,19 @@ func TestVaquero_PubSub(t *testing.T) {
 		}
 		count++
 	}
+}
+
+type User struct {
+	Name string
+	Age  int
+}
+
+func (u *User) Greet() string {
+	return fmt.Sprintf("Hi, I'm %s. %d years old.", u.Name, u.Age)
+}
+func TestVaquero_Tame(t *testing.T) {
+	vaquero, _ := rodeo.TheVaquero(conf, "test")
+	users, e := vaquero.Tame("test.users", &User{})
+	Expect(t, e).ToBe(nil)
+	Expect(t, users).TypeOf("*rodeo.Group")
 }
