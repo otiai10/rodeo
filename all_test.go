@@ -138,7 +138,9 @@ func TestVaquero_Tame(t *testing.T) {
 
 	Expect(t, e).ToBe(nil)
 	Expect(t, users).TypeOf("*rodeo.Group")
-	Expect(t, users.Count()).ToBe(0)
+	count, e := users.Count()
+	Expect(t, e).ToBe(nil)
+	Expect(t, count).ToBe(0)
 
 	u0 := &User{"Mary", 28}
 	u1 := &User{"John", 24}
@@ -146,8 +148,11 @@ func TestVaquero_Tame(t *testing.T) {
 	users.Add(int64(u0.Age), u0)
 	users.Add(int64(u1.Age), u1)
 
-	Expect(t, users.Count()).ToBe(2)
+	count, e = users.Count()
+	Expect(t, e).ToBe(nil)
+	Expect(t, count).ToBe(2)
 
+	// still fail
 	el, err := users.Find(100)
 	Expect(t, err).Not().ToBe(nil)
 

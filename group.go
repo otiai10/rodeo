@@ -36,8 +36,8 @@ func (gr *Group) Find(i int) (el Element, e error) {
 	el = gr.elements[i]
 	return
 }
-func (gr *Group) Count() int {
-	return len(gr.elements)
+func (gr *Group) Count() (int, error) {
+	return gr.facade.ZCount(gr.key)
 }
 
 type Element struct {

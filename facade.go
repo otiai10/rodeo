@@ -50,6 +50,26 @@ func (fcd *pFacade) ZAdd(key string, score int64, obj interface{}) (e error) {
 	result := fcd.Protcol.Request("ZADD", key, strconv.FormatInt(score, 10), string(bs)).Execute(fcd.Conn).ToResult()
 	return result.Error
 }
+func (fcd *pFacade) ZCount(key string, args ...int64) (count int, e error) {
+	min, max := "-inf", "+inf"
+	if 0 < len(args) {
+		min = strconv.FormatInt(args[0], 10)
+	}
+	if 1 < len(args) {
+		max = strconv.FormatInt(args[1], 10)
+	}
+	result := fcd.Protcol.Request(
+		"ZCOUNT",
+		key,
+		min,
+		max,
+	).Execute(fcd.Conn).ToResult()
+	if count, e = strconv.Atoi(result.Response); e == nil {
+		return
+	}
+	e = result.Error
+	return
+}
 func (fcd *pFacade) Listen(chanName string, ch *chan string) {
 	fcd.Protcol.Request("SUBSCRIBE", chanName).WaitFor(fcd.Conn, ch)
 }
