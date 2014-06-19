@@ -3,6 +3,7 @@ package rodeo
 import "net"
 import "github.com/otiai10/rodeo/protocol"
 import "encoding/json"
+import "strconv"
 
 // type pFacade
 // convert types of key and value
@@ -38,6 +39,15 @@ func (fcd *pFacade) SetStruct(key string, obj interface{}) (e error) {
 		return
 	}
 	result := fcd.Protcol.Request("SET", key, string(bs)).Execute(fcd.Conn).ToResult()
+	return result.Error
+}
+func (fcd *pFacade) ZAdd(key string, score int64, obj interface{}) (e error) {
+	var bs []byte
+	bs, e = json.Marshal(obj)
+	if e != nil {
+		return
+	}
+	result := fcd.Protcol.Request("ZADD", key, strconv.FormatInt(score, 10), string(bs)).Execute(fcd.Conn).ToResult()
 	return result.Error
 }
 func (fcd *pFacade) Listen(chanName string, ch *chan string) {
