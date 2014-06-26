@@ -1,6 +1,6 @@
 package rodeo
 
-func (vaq *Vaquero) Tame(key string, representative interface{}) (gr *Group, e error) {
+func (v *Vaquero) Tame(key string, representative interface{}) (gr *Group, e error) {
 	// TODO: delegate connection of Vaquero to Group
 	facade, e := connect(vaq.Conf.Host, vaq.Conf.Port)
 	if e != nil {
