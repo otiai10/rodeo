@@ -8,6 +8,7 @@ import "strconv"
 import "bufio"
 import "fmt"
 
+// RedisProtocol
 // 相手がredisであることを知っている
 // redis特有の文字列整形を知っている
 // redisのロジックはすべてここに閉じ込める
@@ -18,35 +19,36 @@ type RedisProtocol struct {
 	Error    error
 }
 
+const (
+	markerLength    = "$"
+	markerNonExists = "$-1"
+	sep             = "\r\n"
+	bufSize         = 1024
+	cmdGET          = "GET"
+	cmdSET          = "SET"
+	cmdDEL          = "DEL"
+	cmdZADD         = "ZADD"
+	cmdZCOUNT       = "ZCOUNT"
+	cmdZRANGE       = "ZRANGE"
+	cmdSUBSCRIBE    = "SUBSCRIBE"
+	cmdPUBLISH      = "PUBLISH"
+)
+
+// Command interface.
 type Command interface {
 	Build() []byte
 	Parse(res []byte) (string, error)
 }
+
+// CommandDefault defines default functionalities.
 type CommandDefault struct{}
 
 func (d CommandDefault) getLenStr(str string) string {
-	return marker_len + strconv.Itoa(len(str))
+	return markerLength + strconv.Itoa(len(str))
 }
 
 var (
-	marker_len = "$"
-	marker_ss  = "+"
-	non_exists = "$-1"
-	sep        = "\r\n"
-	buf_size   = 1024
-)
-var (
-	CMD_GET       = "GET"
-	CMD_SET       = "SET"
-	CMD_DEL       = "DEL"
-	CMD_ZADD      = "ZADD"
-	CMD_ZCOUNT    = "ZCOUNT"
-	CMD_ZRANGE    = "ZRANGE"
-	CMD_SUBSCRIBE = "SUBSCRIBE"
-	CMD_PUBLISH   = "PUBLISH"
-)
-var (
-	E_Header = "RedisProtocol: "
+	ErrorHeader = "RedisProtocol: "
 )
 
 func (p *RedisProtocol) Request(args ...string) protocol.Protocol {
@@ -63,24 +65,24 @@ func (p *RedisProtocol) Request(args ...string) protocol.Protocol {
 }
 func getCommand(cmds []string) (command Command, e error) {
 	switch cmds[0] {
-	case CMD_GET:
+	case cmdGET:
 		return CommandGet{key: cmds[1]}, nil
-	case CMD_SET:
+	case cmdSET:
 		return CommandSet{key: cmds[1], value: cmds[2]}, nil
-	case CMD_DEL:
+	case cmdDEL:
 		return CommandDel{key: cmds[1]}, nil
-	case CMD_SUBSCRIBE:
+	case cmdSUBSCRIBE:
 		return CommandSubscribe{chanName: cmds[1]}, nil
-	case CMD_PUBLISH:
+	case cmdPUBLISH:
 		return CommandPublish{chanName: cmds[1], message: cmds[2]}, nil
-	case CMD_ZADD:
+	case cmdZADD:
 		return CommandZadd{key: cmds[1], score: cmds[2], value: cmds[3]}, nil
-	case CMD_ZCOUNT:
+	case cmdZCOUNT:
 		return CommandZcount{key: cmds[1], min: cmds[2], max: cmds[3]}, nil
-	case CMD_ZRANGE:
+	case cmdZRANGE:
 		return CommandZrange{key: cmds[1], start: cmds[2], stop: cmds[3], opt: cmds[4]}, nil
 	}
-	e = errors.New(fmt.Sprintf("Command not found for `%s`", cmds[0]))
+	e = fmt.Errorf("Command not found for `%s`", cmds[0])
 	return
 }
 func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
@@ -95,11 +97,11 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 		return p
 	}
 
-	tcpConnReader := bufio.NewReaderSize(conn, buf_size)
+	tcpConnReader := bufio.NewReaderSize(conn, bufSize)
 
 	fmt.Fprintf(conn, string(message))
 
-	response := make([]byte, buf_size)
+	response := make([]byte, bufSize)
 	_, rerr := tcpConnReader.Read(response)
 
 	if rerr != nil {
@@ -113,11 +115,11 @@ func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 
 	message := p.Command.Build()
 
-	tcpConnReader := bufio.NewReaderSize(conn, buf_size)
+	tcpConnReader := bufio.NewReaderSize(conn, bufSize)
 
 	go func() {
 		fmt.Fprintf(conn, string(message))
-		response := make([]byte, buf_size)
+		response := make([]byte, bufSize)
 		for {
 			_, _ = tcpConnReader.Read(response)
 			res, e := p.Command.Parse(response)
@@ -137,6 +139,6 @@ func (p *RedisProtocol) ToResult() (result protocol.Result) {
 	return protocol.Result{Response: res}
 }
 func (p *RedisProtocol) isError(errMessage string) protocol.Protocol {
-	p.Error = errors.New(E_Header + errMessage)
+	p.Error = errors.New(ErrorHeader + errMessage)
 	return p
 }

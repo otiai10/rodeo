@@ -13,8 +13,8 @@ type CommandGet struct {
 func (this CommandGet) Build() []byte {
 	words := []string{
 		"*2",
-		this.getLenStr(CMD_GET),
-		CMD_GET,
+		this.getLenStr(cmdGET),
+		cmdGET,
 		this.getLenStr(this.key),
 		this.key,
 	}
@@ -26,7 +26,7 @@ func (this CommandGet) Parse(res []byte) (result string, e error) {
 
 	if ok, _ := regexp.Match("\\$.+\\r\\n", res); ok {
 		lines := strings.Split(string(res), "\r\n")
-		if lines[0] == non_exists {
+		if lines[0] == markerNonExists {
 			return
 		}
 		// TODO: validate

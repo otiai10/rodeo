@@ -4,6 +4,7 @@ import "strings"
 import "fmt"
 import "regexp"
 
+// CommandZcount provides TCP communication of `ZCOUNT`.
 type CommandZcount struct {
 	key string
 	min string
@@ -11,22 +12,25 @@ type CommandZcount struct {
 	CommandDefault
 }
 
-func (this CommandZcount) Build() []byte {
+// Build builds TCP message by initialized parameters.
+func (cmd CommandZcount) Build() []byte {
 	words := []string{
 		"*4",
-		this.getLenStr(CMD_ZCOUNT),
-		CMD_ZCOUNT,
-		this.getLenStr(this.key),
-		this.key,
-		this.getLenStr(this.min),
-		this.min,
-		this.getLenStr(this.max),
-		this.max,
+		cmd.getLenStr(cmdZCOUNT),
+		cmdZCOUNT,
+		cmd.getLenStr(cmd.key),
+		cmd.key,
+		cmd.getLenStr(cmd.min),
+		cmd.min,
+		cmd.getLenStr(cmd.max),
+		cmd.max,
 	}
 	joined := strings.Join(words, sep) + sep
 	return []byte(joined)
 }
-func (this CommandZcount) Parse(res []byte) (result string, e error) {
+
+// Parse parses TCP response.
+func (cmd CommandZcount) Parse(res []byte) (result string, e error) {
 	re := regexp.MustCompile(":([0-9]+)")
 	if matches := re.FindStringSubmatch(string(res)); len(matches) > 1 {
 		result = matches[1]

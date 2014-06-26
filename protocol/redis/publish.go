@@ -11,8 +11,8 @@ type CommandPublish struct {
 func (this CommandPublish) Build() []byte {
 	words := []string{
 		"*3",
-		this.getLenStr(CMD_PUBLISH),
-		CMD_PUBLISH,
+		this.getLenStr(cmdPUBLISH),
+		cmdPUBLISH,
 		this.getLenStr(this.chanName),
 		this.chanName,
 		this.getLenStr(this.message),

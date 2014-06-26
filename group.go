@@ -2,7 +2,7 @@ package rodeo
 
 func (v *Vaquero) Tame(key string, representative interface{}) (gr *Group, e error) {
 	// TODO: delegate connection of Vaquero to Group
-	facade, e := connect(vaq.Conf.Host, vaq.Conf.Port)
+	facade, e := connect(v.Conf.Host, v.Conf.Port)
 	if e != nil {
 		return
 	}

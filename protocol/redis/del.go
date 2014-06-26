@@ -14,8 +14,8 @@ type CommandDel struct {
 func (this CommandDel) Build() []byte {
 	words := []string{
 		"*2",
-		this.getLenStr(CMD_DEL),
-		CMD_DEL, // TODO: DRY
+		this.getLenStr(cmdDEL),
+		cmdDEL, // TODO: DRY
 		this.getLenStr(this.key),
 		this.key,
 	}
