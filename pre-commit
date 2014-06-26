@@ -1,5 +1,0 @@
-#!/bin/zsh
-
-# pre-commit hooks
-# should be moved to .git/hooks/pre-commit
-go fmt ./...
