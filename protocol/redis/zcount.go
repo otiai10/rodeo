@@ -12,8 +12,7 @@ type CommandZcount struct {
 	CommandDefault
 }
 
-// Build builds TCP message by initialized parameters.
-func (cmd CommandZcount) Build() []byte {
+func (cmd CommandZcount) build() []byte {
 	words := []string{
 		"*4",
 		cmd.strlen(cmdZCOUNT),

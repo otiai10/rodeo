@@ -13,8 +13,7 @@ type CommandZrange struct {
 	CommandDefault
 }
 
-// Build builds TCP message by initialized parameters.
-func (cmd CommandZrange) Build() []byte {
+func (cmd CommandZrange) build() []byte {
 	words := []string{
 		"*5",
 		cmd.strlen(cmdZRANGE),

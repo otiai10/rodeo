@@ -34,7 +34,7 @@ const (
 
 // Command interface.
 type Command interface {
-	Build() []byte
+	build() []byte
 	Parse(res []byte) (string, error)
 }
 
@@ -90,7 +90,7 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 		return p
 	}
 
-	message := p.Command.Build()
+	message := p.Command.build()
 
 	if p.Error != nil {
 		return p
@@ -114,7 +114,7 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 // WaitFor is io waiter for pub/sub model.
 func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 
-	message := p.Command.Build()
+	message := p.Command.build()
 
 	tcpConnReader := bufio.NewReaderSize(conn, bufSize)
 

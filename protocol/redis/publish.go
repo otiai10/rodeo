@@ -9,8 +9,7 @@ type CommandPublish struct {
 	CommandDefault
 }
 
-// Build builds TCP message by initialized parameters.
-func (cmd CommandPublish) Build() []byte {
+func (cmd CommandPublish) build() []byte {
 	words := []string{
 		"*3",
 		cmd.strlen(cmdPUBLISH),

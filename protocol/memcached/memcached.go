@@ -17,7 +17,7 @@ type MemcachedProtocol struct {
 
 // Command interface.
 type Command interface {
-	Build() []byte
+	build() []byte
 	Parse(res []byte) (string, error)
 }
 
@@ -70,7 +70,7 @@ func getCommand(cmds []string) (command Command, e error) {
 // Execute command.
 func (p *MemcachedProtocol) Execute(conn net.Conn) protocol.Protocol {
 
-	message := p.Command.Build()
+	message := p.Command.build()
 
 	if p.Error != nil {
 		return p

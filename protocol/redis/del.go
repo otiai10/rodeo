@@ -10,9 +10,7 @@ type CommandDel struct {
 	CommandDefault
 }
 
-// Build builds TCP message by initialized parameters.
-// TODO: accept multi keys
-func (cmd CommandDel) Build() []byte {
+func (cmd CommandDel) build() []byte {
 	words := []string{
 		"*2",
 		cmd.strlen(cmdDEL),

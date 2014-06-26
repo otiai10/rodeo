@@ -10,8 +10,7 @@ type CommandGet struct {
 	CommandDefault
 }
 
-// Build builds TCP message by initialized parameters.
-func (cmd CommandGet) Build() []byte {
+func (cmd CommandGet) build() []byte {
 	words := []string{
 		cmdGET,
 		cmd.key,

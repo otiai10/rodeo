@@ -11,8 +11,7 @@ type CommandSet struct {
 	CommandDefault
 }
 
-// Build builds TCP message by initialized parameters.
-func (cmd CommandSet) Build() []byte {
+func (cmd CommandSet) build() []byte {
 	words := []string{
 		cmdSET,
 		cmd.key,

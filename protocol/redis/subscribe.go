@@ -10,8 +10,7 @@ type CommandSubscribe struct {
 	CommandDefault
 }
 
-// Build builds TCP message by initialized parameters.
-func (cmd CommandSubscribe) Build() []byte {
+func (cmd CommandSubscribe) build() []byte {
 	words := []string{
 		"*2",
 		cmd.strlen(cmdSUBSCRIBE),
