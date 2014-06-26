@@ -41,6 +41,7 @@ var (
 	CMD_DEL       = "DEL"
 	CMD_ZADD      = "ZADD"
 	CMD_ZCOUNT    = "ZCOUNT"
+	CMD_ZRANGE    = "ZRANGE"
 	CMD_SUBSCRIBE = "SUBSCRIBE"
 	CMD_PUBLISH   = "PUBLISH"
 )
@@ -76,6 +77,8 @@ func getCommand(cmds []string) (command Command, e error) {
 		return CommandZadd{key: cmds[1], score: cmds[2], value: cmds[3]}, nil
 	case CMD_ZCOUNT:
 		return CommandZcount{key: cmds[1], min: cmds[2], max: cmds[3]}, nil
+	case CMD_ZRANGE:
+		return CommandZrange{key: cmds[1], start: cmds[2], stop: cmds[3], opt: cmds[4]}, nil
 	}
 	e = errors.New(fmt.Sprintf("Command not found for `%s`", cmds[0]))
 	return

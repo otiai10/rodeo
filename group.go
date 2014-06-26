@@ -1,7 +1,5 @@
 package rodeo
 
-import "fmt"
-
 func (vaq *Vaquero) Tame(key string, representative interface{}) (gr *Group, e error) {
 	// TODO: delegate connection of Vaquero to Group
 	facade, e := connect(vaq.Conf.Host, vaq.Conf.Port)
@@ -27,13 +25,20 @@ func (gr *Group) Add(score int64, v interface{}) (e error) {
 	// TODO: validate type of v to equal representative
 	return gr.facade.ZAdd(gr.key, score, v)
 }
-func (gr *Group) Find(i int) (el Element, e error) {
-	if len(gr.elements) <= i {
-		// TODO: common method to create error with `[rodeo]` prefix
-		e = fmt.Errorf("Element for index `%v` not found in this group", i)
-		return
+func (gr *Group) Find(args ...int) (elements []*Element) {
+	stuff := gr.representative
+	scoredValues := gr.facade.ZRange(
+		gr.key,
+		args,
+		stuff,
+	)
+	for _, scored := range scoredValues {
+		el := &Element{
+			scored.Value,
+			scored.Score,
+		}
+		elements = append(elements, el)
 	}
-	el = gr.elements[i]
 	return
 }
 func (gr *Group) Count() (int, error) {

@@ -134,7 +134,7 @@ func TestVaquero_Tame(t *testing.T) {
 	// truncate
 	vaquero.Delete("test.users")
 
-	users, e := vaquero.Tame("test.users", &User{})
+	users, e := vaquero.Tame("test.users", User{})
 
 	Expect(t, e).ToBe(nil)
 	Expect(t, users).TypeOf("*rodeo.Group")
@@ -144,21 +144,23 @@ func TestVaquero_Tame(t *testing.T) {
 
 	u0 := &User{"Mary", 28}
 	u1 := &User{"John", 24}
+	u2 := &User{"Steve", 32}
+	u3 := &User{"Anne", 10}
 
 	users.Add(int64(u0.Age), u0)
 	users.Add(int64(u1.Age), u1)
+	users.Add(int64(u2.Age), u2)
+	users.Add(int64(u3.Age), u3)
 
 	count, e = users.Count()
 	Expect(t, e).ToBe(nil)
-	Expect(t, count).ToBe(2)
+	Expect(t, count).ToBe(4)
 
-	// still fail
-	el, err := users.Find(100)
-	Expect(t, err).Not().ToBe(nil)
+	elms := users.Find() // find all
+	Expect(t, elms).TypeOf("[]*rodeo.Element")
+	Expect(t, len(elms)).ToBe(4)
 
-	el, err = users.Find(0)
-	Expect(t, err).ToBe(nil)
-
-	john := el.Retrieve().(*User)
-	Expect(t, john).ToBe(u1)
+	Expect(t, elms[0].Retrieve()).TypeOf("*rodeo_test.User")
+	anne := elms[0].Retrieve().(*User)
+	Expect(t, anne).Deeply().ToBe(u3)
 }
