@@ -1,10 +1,8 @@
-# rodeo
+# rodeo [![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo)
 
 "rodeo" is a simple [Redis](http://redis.io/) client for Go.
 
 ![rodeo](https://cloud.githubusercontent.com/assets/931554/3240193/73767b3a-f120-11e3-8fea-2ea46ab55cc6.png)
-
-[![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo)
 
 # API Samples
 ## Set & Get
@@ -68,19 +66,13 @@ members.Add(1001, Member{"Paul"})
 members.Add(1012, Member{"Ringo"})
 members.Add(1100, Member{"George"})
 
-// ZRANGE members -inf +inf
-members.Range().([]Member) // []Member{{"Paul"},{"Ringo"},{"John"},{"George"}}
-
-// ZRANGE members 2 3
-offset, limit := 2, 1
-members.Range(offset, limit).([]Member) // []Member{{"John"}}
-
 // COUNT members -inf +inf
 members.Count() // 4
 
-// ZRANGEBYSCORE members 1000 1100
-start, end = 1000, 1100
-members.Find(start, end).([]Member) // []Member{{"Paul"},{"Ringo"},{"John"}}
+// ZRANGE members -inf +inf
+found := members.Find()
+found[0].Score() // 1001
+found[0].Retrieve().(*Member) // &Member{Name:Paul}
 ```
 
 # Test
