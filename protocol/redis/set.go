@@ -25,8 +25,7 @@ func (cmd CommandSet) build() []byte {
 	return []byte(joined)
 }
 
-// Parse parses TCP response.
-func (cmd CommandSet) Parse(res []byte) (result string, e error) {
+func (cmd CommandSet) parse(res []byte) (result string, e error) {
 	// TODO: DO NOT CODE IT HARD
 	if ok, _ := regexp.Match("\\+OK", res); ok {
 		// TODO: validate

@@ -23,7 +23,6 @@ func (cmd CommandPublish) build() []byte {
 	return []byte(joined)
 }
 
-// Parse parses TCP response.
-func (cmd CommandPublish) Parse(res []byte) (result string, e error) {
+func (cmd CommandPublish) parse(res []byte) (result string, e error) {
 	return
 }

@@ -31,8 +31,7 @@ func (cmd CommandZrange) build() []byte {
 	return []byte(joined)
 }
 
-// Parse parses TCP response.
-func (cmd CommandZrange) Parse(res []byte) (result string, e error) {
+func (cmd CommandZrange) parse(res []byte) (result string, e error) {
 	re := regexp.MustCompile("\\*([0-9]+)")
 	var recordsCount int
 	if matches := re.FindStringSubmatch(string(res)); len(matches) > 1 {

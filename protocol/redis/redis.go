@@ -35,7 +35,7 @@ const (
 // Command interface.
 type Command interface {
 	build() []byte
-	Parse(res []byte) (string, error)
+	parse(res []byte) (string, error)
 }
 
 // CommandDefault defines default functionalities.
@@ -123,7 +123,7 @@ func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 		response := make([]byte, bufSize)
 		for {
 			_, _ = tcpConnReader.Read(response)
-			res, e := p.Command.Parse(response)
+			res, e := p.Command.parse(response)
 
 			if e != nil {
 				continue
@@ -138,7 +138,7 @@ func (p *RedisProtocol) ToResult() (result protocol.Result) {
 	if p.Error != nil {
 		return protocol.Result{Error: p.Error}
 	}
-	res, _ := p.Command.Parse(p.response)
+	res, _ := p.Command.parse(p.response)
 	return protocol.Result{Response: res}
 }
 func (p *RedisProtocol) isError(errMessage string) protocol.Protocol {

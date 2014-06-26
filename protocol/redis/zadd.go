@@ -28,8 +28,7 @@ func (cmd CommandZadd) build() []byte {
 	return []byte(joined)
 }
 
-// Parse parses TCP response.
-func (cmd CommandZadd) Parse(res []byte) (result string, e error) {
+func (cmd CommandZadd) parse(res []byte) (result string, e error) {
 	// TODO: DO NOT CODE IT HARD
 	if ok, _ := regexp.Match(":1", res); ok {
 		// TODO: validate

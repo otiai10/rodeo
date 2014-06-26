@@ -18,7 +18,7 @@ type MemcachedProtocol struct {
 // Command interface.
 type Command interface {
 	build() []byte
-	Parse(res []byte) (string, error)
+	parse(res []byte) (string, error)
 }
 
 // CommandDefault defines default functionalities.
@@ -97,7 +97,7 @@ func (p *MemcachedProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 
 // ToResult parses TCP response.
 func (p *MemcachedProtocol) ToResult() (result protocol.Result) {
-	res, _ := p.Command.Parse(p.response)
+	res, _ := p.Command.parse(p.response)
 	return protocol.Result{Response: res}
 }
 func (p *MemcachedProtocol) isError(errMessage string) protocol.Protocol {

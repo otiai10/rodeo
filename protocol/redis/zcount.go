@@ -28,8 +28,7 @@ func (cmd CommandZcount) build() []byte {
 	return []byte(joined)
 }
 
-// Parse parses TCP response.
-func (cmd CommandZcount) Parse(res []byte) (result string, e error) {
+func (cmd CommandZcount) parse(res []byte) (result string, e error) {
 	re := regexp.MustCompile(":([0-9]+)")
 	if matches := re.FindStringSubmatch(string(res)); len(matches) > 1 {
 		result = matches[1]

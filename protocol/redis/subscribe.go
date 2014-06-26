@@ -22,8 +22,7 @@ func (cmd CommandSubscribe) build() []byte {
 	return []byte(joined)
 }
 
-// Parse parses TCP response.
-func (cmd CommandSubscribe) Parse(res []byte) (result string, e error) {
+func (cmd CommandSubscribe) parse(res []byte) (result string, e error) {
 	// TODO: DO NOT CODE IT HARD
 	if ok, _ := regexp.Match("\\\\*.+\\r\\n", res); ok {
 		lines := strings.Split(string(res), "\r\n")
