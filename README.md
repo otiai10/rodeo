@@ -1,10 +1,8 @@
-# rodeo
+# rodeo [![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo)
 
 "rodeo" is a simple [Redis](http://redis.io/) client for Go.
 
 ![rodeo](https://cloud.githubusercontent.com/assets/931554/3240193/73767b3a-f120-11e3-8fea-2ea46ab55cc6.png)
-
-[![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo)
 
 # API Samples
 ## Set & Get
@@ -50,7 +48,32 @@ go func(){
 vaqueroB, _ := rodeo.TheVaquero(conf)
 _ = vaqueroB.Pub("mychan", "Hi, this is vaqueroB")
 ```
+## Tame
+can provide active model for Sorted Sets of Redis.
+```go
+type Member struct {
+    Name string
+}
 
+vaquero, _ := rodeo.TheVaquero(conf)
+members := vaquero.Tame("members")
+
+members.Count() // 0
+members.Range().([]Member) // []
+
+members.Add(1020, Member{"John"})
+members.Add(1001, Member{"Paul"})
+members.Add(1012, Member{"Ringo"})
+members.Add(1100, Member{"George"})
+
+// COUNT members -inf +inf
+members.Count() // 4
+
+// ZRANGE members -inf +inf
+found := members.Find()
+found[0].Score() // 1001
+found[0].Retrieve().(*Member) // &Member{Name:Paul}
+```
 
 # Test
 ```sh

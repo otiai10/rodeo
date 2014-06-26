@@ -39,6 +39,9 @@ var (
 	CMD_GET       = "GET"
 	CMD_SET       = "SET"
 	CMD_DEL       = "DEL"
+	CMD_ZADD      = "ZADD"
+	CMD_ZCOUNT    = "ZCOUNT"
+	CMD_ZRANGE    = "ZRANGE"
 	CMD_SUBSCRIBE = "SUBSCRIBE"
 	CMD_PUBLISH   = "PUBLISH"
 )
@@ -70,11 +73,21 @@ func getCommand(cmds []string) (command Command, e error) {
 		return CommandSubscribe{chanName: cmds[1]}, nil
 	case CMD_PUBLISH:
 		return CommandPublish{chanName: cmds[1], message: cmds[2]}, nil
+	case CMD_ZADD:
+		return CommandZadd{key: cmds[1], score: cmds[2], value: cmds[3]}, nil
+	case CMD_ZCOUNT:
+		return CommandZcount{key: cmds[1], min: cmds[2], max: cmds[3]}, nil
+	case CMD_ZRANGE:
+		return CommandZrange{key: cmds[1], start: cmds[2], stop: cmds[3], opt: cmds[4]}, nil
 	}
 	e = errors.New(fmt.Sprintf("Command not found for `%s`", cmds[0]))
 	return
 }
 func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
+
+	if p.Error != nil {
+		return p
+	}
 
 	message := p.Command.Build()
 
@@ -117,6 +130,9 @@ func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 	}()
 }
 func (p *RedisProtocol) ToResult() (result protocol.Result) {
+	if p.Error != nil {
+		return protocol.Result{Error: p.Error}
+	}
 	res, _ := p.Command.Parse(p.response)
 	return protocol.Result{Response: res}
 }

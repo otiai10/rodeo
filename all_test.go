@@ -5,6 +5,7 @@ import "github.com/otiai10/rodeo"
 import . "github.com/otiai10/mint"
 import "testing"
 import "time"
+import "fmt"
 
 var conf = rodeo.Conf{
 	Host: "localhost",
@@ -117,4 +118,49 @@ func TestVaquero_PubSub(t *testing.T) {
 		}
 		count++
 	}
+}
+
+type User struct {
+	Name string
+	Age  int
+}
+
+func (u *User) Greet() string {
+	return fmt.Sprintf("Hi, I'm %s. %d years old.", u.Name, u.Age)
+}
+func TestVaquero_Tame(t *testing.T) {
+	vaquero, _ := rodeo.TheVaquero(conf, "test")
+
+	// truncate
+	vaquero.Delete("test.users")
+
+	users, e := vaquero.Tame("test.users", User{})
+
+	Expect(t, e).ToBe(nil)
+	Expect(t, users).TypeOf("*rodeo.Group")
+	count, e := users.Count()
+	Expect(t, e).ToBe(nil)
+	Expect(t, count).ToBe(0)
+
+	u0 := &User{"Mary", 28}
+	u1 := &User{"John", 24}
+	u2 := &User{"Steve", 32}
+	u3 := &User{"Anne", 10}
+
+	users.Add(int64(u0.Age), u0)
+	users.Add(int64(u1.Age), u1)
+	users.Add(int64(u2.Age), u2)
+	users.Add(int64(u3.Age), u3)
+
+	count, e = users.Count()
+	Expect(t, e).ToBe(nil)
+	Expect(t, count).ToBe(4)
+
+	elms := users.Find() // find all
+	Expect(t, elms).TypeOf("[]*rodeo.Element")
+	Expect(t, len(elms)).ToBe(4)
+
+	Expect(t, elms[0].Retrieve()).TypeOf("*rodeo_test.User")
+	anne := elms[0].Retrieve().(*User)
+	Expect(t, anne).Deeply().ToBe(u3)
 }
