@@ -7,7 +7,7 @@ import "regexp"
 // CommandGet provides TCP communication of `GET`.
 type CommandGet struct {
 	key string
-	CommandDefault
+	commandDefault
 }
 
 func (cmd CommandGet) build() []byte {

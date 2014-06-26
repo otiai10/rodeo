@@ -10,7 +10,7 @@ type CommandZrange struct {
 	start string
 	stop  string
 	opt   string
-	CommandDefault
+	commandDefault
 }
 
 func (cmd CommandZrange) build() []byte {

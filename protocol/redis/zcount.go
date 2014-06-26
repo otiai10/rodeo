@@ -9,7 +9,7 @@ type CommandZcount struct {
 	key string
 	min string
 	max string
-	CommandDefault
+	commandDefault
 }
 
 func (cmd CommandZcount) build() []byte {

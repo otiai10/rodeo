@@ -8,7 +8,7 @@ import "regexp"
 type CommandSet struct {
 	key   string
 	value string
-	CommandDefault
+	commandDefault
 }
 
 func (cmd CommandSet) build() []byte {

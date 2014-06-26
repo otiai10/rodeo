@@ -7,7 +7,7 @@ import "regexp"
 // CommandDel provides TCP communication of `DEL`.
 type CommandDel struct {
 	key string
-	CommandDefault
+	commandDefault
 }
 
 func (cmd CommandDel) build() []byte {

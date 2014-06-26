@@ -7,7 +7,7 @@ import "regexp"
 // CommandSubscribe provides TCP communication of `SUBSCRIBE`.
 type CommandSubscribe struct {
 	chanName string
-	CommandDefault
+	commandDefault
 }
 
 func (cmd CommandSubscribe) build() []byte {

@@ -6,7 +6,7 @@ import "strings"
 type CommandPublish struct {
 	chanName string
 	message  string
-	CommandDefault
+	commandDefault
 }
 
 func (cmd CommandPublish) build() []byte {

@@ -9,7 +9,7 @@ type CommandZadd struct {
 	key   string
 	score string
 	value string
-	CommandDefault
+	commandDefault
 }
 
 func (cmd CommandZadd) build() []byte {

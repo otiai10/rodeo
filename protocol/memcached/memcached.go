@@ -11,21 +11,20 @@ import "fmt"
 type MemcachedProtocol struct {
 	message  []byte
 	response []byte
-	Command  Command
+	Command  command
 	Error    error
 }
 
 // Command interface.
-type Command interface {
+type command interface {
 	build() []byte
 	parse(res []byte) (string, error)
 }
 
-// CommandDefault defines default functionalities.
-type CommandDefault struct{}
+type commandDefault struct{}
 
 // TODO: change method name
-func (d CommandDefault) strlen(str string) string {
+func (d commandDefault) strlen(str string) string {
 	return strconv.Itoa(len(str))
 }
 
@@ -49,14 +48,14 @@ func (p *MemcachedProtocol) Request(args ...string) protocol.Protocol {
 	if lenArgs < 2 {
 		return p.isError("Too short params")
 	}
-	command, e := getCommand(args)
+	cmd, e := getCommand(args)
 	if e != nil {
 		return p.isError(e.Error())
 	}
-	p.Command = command
+	p.Command = cmd
 	return p
 }
-func getCommand(cmds []string) (command Command, e error) {
+func getCommand(cmds []string) (cmd command, e error) {
 	switch cmds[0] {
 	case cmdGET:
 		return CommandGet{key: cmds[1]}, nil
