@@ -15,9 +15,9 @@ type CommandDel struct {
 func (cmd CommandDel) Build() []byte {
 	words := []string{
 		"*2",
-		cmd.getLenStr(cmdDEL),
+		cmd.strlen(cmdDEL),
 		cmdDEL, // TODO: DRY
-		cmd.getLenStr(cmd.key),
+		cmd.strlen(cmd.key),
 		cmd.key,
 	}
 	joined := strings.Join(words, sep) + sep

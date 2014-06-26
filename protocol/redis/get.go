@@ -14,9 +14,9 @@ type CommandGet struct {
 func (cmd CommandGet) Build() []byte {
 	words := []string{
 		"*2",
-		cmd.getLenStr(cmdGET),
+		cmd.strlen(cmdGET),
 		cmdGET,
-		cmd.getLenStr(cmd.key),
+		cmd.strlen(cmd.key),
 		cmd.key,
 	}
 	joined := strings.Join(words, sep) + sep

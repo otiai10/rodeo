@@ -14,9 +14,9 @@ type CommandSubscribe struct {
 func (cmd CommandSubscribe) Build() []byte {
 	words := []string{
 		"*2",
-		cmd.getLenStr(cmdSUBSCRIBE),
+		cmd.strlen(cmdSUBSCRIBE),
 		cmdSUBSCRIBE,
-		cmd.getLenStr(cmd.chanName),
+		cmd.strlen(cmd.chanName),
 		cmd.chanName,
 	}
 	joined := strings.Join(words, sep) + sep

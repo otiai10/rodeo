@@ -18,7 +18,7 @@ func (cmd CommandSet) Build() []byte {
 		cmd.key,
 		FLAG,
 		"0", // Expire
-		cmd.getLenStr(cmd.value),
+		cmd.strlen(cmd.value),
 	}
 	joined := strings.Join(words, sep) + suffix
 	return []byte(joined + cmd.value + suffix)

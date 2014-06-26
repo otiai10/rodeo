@@ -16,13 +16,13 @@ type CommandZadd struct {
 func (cmd CommandZadd) Build() []byte {
 	words := []string{
 		"*4",
-		cmd.getLenStr(cmdZADD),
+		cmd.strlen(cmdZADD),
 		cmdZADD,
-		cmd.getLenStr(cmd.key),
+		cmd.strlen(cmd.key),
 		cmd.key,
-		cmd.getLenStr(cmd.score),
+		cmd.strlen(cmd.score),
 		cmd.score,
-		cmd.getLenStr(cmd.value),
+		cmd.strlen(cmd.value),
 		cmd.value,
 	}
 	joined := strings.Join(words, sep) + sep

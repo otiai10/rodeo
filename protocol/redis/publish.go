@@ -13,11 +13,11 @@ type CommandPublish struct {
 func (cmd CommandPublish) Build() []byte {
 	words := []string{
 		"*3",
-		cmd.getLenStr(cmdPUBLISH),
+		cmd.strlen(cmdPUBLISH),
 		cmdPUBLISH,
-		cmd.getLenStr(cmd.chanName),
+		cmd.strlen(cmd.chanName),
 		cmd.chanName,
-		cmd.getLenStr(cmd.message),
+		cmd.strlen(cmd.message),
 		cmd.message,
 	}
 	joined := strings.Join(words, sep) + sep

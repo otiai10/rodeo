@@ -15,11 +15,11 @@ type CommandSet struct {
 func (cmd CommandSet) Build() []byte {
 	words := []string{
 		"*3",
-		cmd.getLenStr(cmdSET),
+		cmd.strlen(cmdSET),
 		cmdSET,
-		cmd.getLenStr(cmd.key),
+		cmd.strlen(cmd.key),
 		cmd.key,
-		cmd.getLenStr(cmd.value),
+		cmd.strlen(cmd.value),
 		cmd.value,
 	}
 	joined := strings.Join(words, sep) + sep

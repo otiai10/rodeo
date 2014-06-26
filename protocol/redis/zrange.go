@@ -17,15 +17,15 @@ type CommandZrange struct {
 func (cmd CommandZrange) Build() []byte {
 	words := []string{
 		"*5",
-		cmd.getLenStr(cmdZRANGE),
+		cmd.strlen(cmdZRANGE),
 		cmdZRANGE,
-		cmd.getLenStr(cmd.key),
+		cmd.strlen(cmd.key),
 		cmd.key,
-		cmd.getLenStr(cmd.start),
+		cmd.strlen(cmd.start),
 		cmd.start,
-		cmd.getLenStr(cmd.stop),
+		cmd.strlen(cmd.stop),
 		cmd.stop,
-		cmd.getLenStr(cmd.opt),
+		cmd.strlen(cmd.opt),
 		cmd.opt,
 	}
 	joined := strings.Join(words, sep) + sep

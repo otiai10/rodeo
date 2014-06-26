@@ -16,13 +16,13 @@ type CommandZcount struct {
 func (cmd CommandZcount) Build() []byte {
 	words := []string{
 		"*4",
-		cmd.getLenStr(cmdZCOUNT),
+		cmd.strlen(cmdZCOUNT),
 		cmdZCOUNT,
-		cmd.getLenStr(cmd.key),
+		cmd.strlen(cmd.key),
 		cmd.key,
-		cmd.getLenStr(cmd.min),
+		cmd.strlen(cmd.min),
 		cmd.min,
-		cmd.getLenStr(cmd.max),
+		cmd.strlen(cmd.max),
 		cmd.max,
 	}
 	joined := strings.Join(words, sep) + sep

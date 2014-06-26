@@ -25,7 +25,7 @@ type Command interface {
 type CommandDefault struct{}
 
 // TODO: change method name
-func (d CommandDefault) getLenStr(str string) string {
+func (d CommandDefault) strlen(str string) string {
 	return strconv.Itoa(len(str))
 }
 
