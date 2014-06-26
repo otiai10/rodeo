@@ -1,4 +1,4 @@
-# rodeo [![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo)
+# rodeo [![Build Status](https://travis-ci.org/otiai10/rodeo.svg?branch=master)](https://travis-ci.org/otiai10/rodeo) [![GoDoc](https://godoc.org/github.com/otiai10/rodeo?status.png)](https://godoc.org/github.com/otiai10/rodeo)
 
 "rodeo" is a simple [Redis](http://redis.io/) client for Go.
 
