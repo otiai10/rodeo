@@ -4,33 +4,34 @@ import "strings"
 import "regexp"
 import "strconv"
 
+// CommandZrange provides TCP communication of `ZRANGE`.
 type CommandZrange struct {
 	key   string
 	start string
 	stop  string
 	opt   string
-	CommandDefault
+	commandDefault
 }
 
-func (this CommandZrange) Build() []byte {
+func (cmd CommandZrange) build() []byte {
 	words := []string{
 		"*5",
-		this.getLenStr(CMD_ZRANGE),
-		CMD_ZRANGE,
-		this.getLenStr(this.key),
-		this.key,
-		this.getLenStr(this.start),
-		this.start,
-		this.getLenStr(this.stop),
-		this.stop,
-		this.getLenStr(this.opt),
-		this.opt,
+		cmd.strlen(cmdZRANGE),
+		cmdZRANGE,
+		cmd.strlen(cmd.key),
+		cmd.key,
+		cmd.strlen(cmd.start),
+		cmd.start,
+		cmd.strlen(cmd.stop),
+		cmd.stop,
+		cmd.strlen(cmd.opt),
+		cmd.opt,
 	}
 	joined := strings.Join(words, sep) + sep
 	return []byte(joined)
 }
 
-func (this CommandZrange) Parse(res []byte) (result string, e error) {
+func (cmd CommandZrange) parse(res []byte) (result string, e error) {
 	re := regexp.MustCompile("\\*([0-9]+)")
 	var recordsCount int
 	if matches := re.FindStringSubmatch(string(res)); len(matches) > 1 {

@@ -1,24 +1,25 @@
 package memcached
 
-import "errors"
 import "strings"
 import "fmt"
 import "regexp"
 
+// CommandGet provides TCP communication of `get`.
 type CommandGet struct {
 	key string
-	CommandDefault
+	commandDefault
 }
 
-func (this CommandGet) Build() []byte {
+func (cmd CommandGet) build() []byte {
 	words := []string{
-		CMD_GET,
-		this.key,
+		cmdGET,
+		cmd.key,
 	}
 	joined := strings.Join(words, sep) + suffix
 	return []byte(joined)
 }
-func (this CommandGet) Parse(res []byte) (result string, e error) {
+
+func (cmd CommandGet) parse(res []byte) (result string, e error) {
 	// TODO: DO NOT CODE IT HARD
 	if ok, _ := regexp.Match("\\r\\n", res); ok {
 		lines := strings.Split(string(res), "\r\n")
@@ -26,8 +27,6 @@ func (this CommandGet) Parse(res []byte) (result string, e error) {
 		result = lines[1]
 		return
 	}
-	e = errors.New(
-		fmt.Sprintf("Response to `Get` is `%v`", string(res)),
-	)
+	e = fmt.Errorf("Response to `Get` is `%v`", string(res))
 	return
 }

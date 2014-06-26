@@ -4,30 +4,31 @@ import "regexp"
 import "fmt"
 import "strings"
 
+// CommandZadd provides TCP communication of `ZADD`.
 type CommandZadd struct {
 	key   string
 	score string
 	value string
-	CommandDefault
+	commandDefault
 }
 
-func (this CommandZadd) Build() []byte {
+func (cmd CommandZadd) build() []byte {
 	words := []string{
 		"*4",
-		this.getLenStr(CMD_ZADD),
-		CMD_ZADD,
-		this.getLenStr(this.key),
-		this.key,
-		this.getLenStr(this.score),
-		this.score,
-		this.getLenStr(this.value),
-		this.value,
+		cmd.strlen(cmdZADD),
+		cmdZADD,
+		cmd.strlen(cmd.key),
+		cmd.key,
+		cmd.strlen(cmd.score),
+		cmd.score,
+		cmd.strlen(cmd.value),
+		cmd.value,
 	}
 	joined := strings.Join(words, sep) + sep
 	return []byte(joined)
 }
 
-func (this CommandZadd) Parse(res []byte) (result string, e error) {
+func (cmd CommandZadd) parse(res []byte) (result string, e error) {
 	// TODO: DO NOT CODE IT HARD
 	if ok, _ := regexp.Match(":1", res); ok {
 		// TODO: validate
