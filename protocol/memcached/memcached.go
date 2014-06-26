@@ -3,14 +3,11 @@ package memcached
 import "github.com/otiai10/rodeo/protocol"
 
 import "net"
-import "errors"
 import "strconv"
 import "bufio"
 import "fmt"
 
-// 相手がmemcachedであることを知っている
-// memcached特有の文字列整形を知っている
-// memcachedのロジックはすべてここに閉じ込める
+// MemcachedProtocol knows the way to message TCP.
 type MemcachedProtocol struct {
 	message  []byte
 	response []byte
@@ -18,29 +15,35 @@ type MemcachedProtocol struct {
 	Error    error
 }
 
+// Command interface.
 type Command interface {
 	Build() []byte
 	Parse(res []byte) (string, error)
 }
+
+// CommandDefault defines default functionalities.
 type CommandDefault struct{}
 
+// TODO: change method name
 func (d CommandDefault) getLenStr(str string) string {
 	return strconv.Itoa(len(str))
 }
 
 var (
-	sep      = " "
-	suffix   = "\r\n"
-	buf_size = 1024
-	FLAG     = "1001"
-	CMD_GET  = "get"
-	CMD_SET  = "set"
-	SET_OK   = "STORED"
-)
-var (
-	E_Header = "MemcachedProtocol: "
+	sep     = " "
+	suffix  = "\r\n"
+	bufSize = 1024
+	// FLAG is `flag` of memcached.
+	FLAG   = "1001"
+	cmdGET = "get"
+	cmdSET = "set"
+	setOK  = "STORED"
+	// ErrorHeader is header of error messages.
+	ErrorHeader = "MemcachedProtocol: "
 )
 
+// Request is interface to call commands.
+// TODO: だから全てのメソッドがexportedじゃなくて良い気がする
 func (p *MemcachedProtocol) Request(args ...string) protocol.Protocol {
 	lenArgs := len(args)
 	if lenArgs < 2 {
@@ -55,14 +58,16 @@ func (p *MemcachedProtocol) Request(args ...string) protocol.Protocol {
 }
 func getCommand(cmds []string) (command Command, e error) {
 	switch cmds[0] {
-	case CMD_GET:
+	case cmdGET:
 		return CommandGet{key: cmds[1]}, nil
-	case CMD_SET:
+	case cmdSET:
 		return CommandSet{key: cmds[1], value: cmds[2]}, nil
 	}
-	e = errors.New(fmt.Sprintf("Command not found for `%s`", cmds[0]))
+	e = fmt.Errorf("Command not found for `%s`", cmds[0])
 	return
 }
+
+// Execute command.
 func (p *MemcachedProtocol) Execute(conn net.Conn) protocol.Protocol {
 
 	message := p.Command.Build()
@@ -71,11 +76,11 @@ func (p *MemcachedProtocol) Execute(conn net.Conn) protocol.Protocol {
 		return p
 	}
 
-	tcpConnReader := bufio.NewReaderSize(conn, buf_size)
+	tcpConnReader := bufio.NewReaderSize(conn, bufSize)
 
 	fmt.Fprintf(conn, string(message))
 
-	response := make([]byte, buf_size)
+	response := make([]byte, bufSize)
 	_, rerr := tcpConnReader.Read(response)
 
 	if rerr != nil {
@@ -85,13 +90,17 @@ func (p *MemcachedProtocol) Execute(conn net.Conn) protocol.Protocol {
 	p.response = response
 	return p
 }
+
+// WaitFor is io waiter for pub/sub model.
 func (p *MemcachedProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 }
+
+// ToResult parses TCP response.
 func (p *MemcachedProtocol) ToResult() (result protocol.Result) {
 	res, _ := p.Command.Parse(p.response)
 	return protocol.Result{Response: res}
 }
 func (p *MemcachedProtocol) isError(errMessage string) protocol.Protocol {
-	p.Error = errors.New(E_Header + errMessage)
+	p.Error = fmt.Errorf(ErrorHeader + errMessage)
 	return p
 }

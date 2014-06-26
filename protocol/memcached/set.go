@@ -1,32 +1,36 @@
 package memcached
 
-import "errors"
 import "strings"
 import "regexp"
+import "fmt"
 
+// CommandSet provides TCP communication of `set`.
 type CommandSet struct {
 	key   string
 	value string
 	CommandDefault
 }
 
-func (this CommandSet) Build() []byte {
+// Build builds TCP message by initialized parameters.
+func (cmd CommandSet) Build() []byte {
 	words := []string{
-		CMD_SET,
-		this.key,
+		cmdSET,
+		cmd.key,
 		FLAG,
 		"0", // Expire
-		this.getLenStr(this.value),
+		cmd.getLenStr(cmd.value),
 	}
 	joined := strings.Join(words, sep) + suffix
-	return []byte(joined + this.value + suffix)
+	return []byte(joined + cmd.value + suffix)
 }
-func (this CommandSet) Parse(res []byte) (result string, e error) {
+
+// Parse parses TCP response.
+func (cmd CommandSet) Parse(res []byte) (result string, e error) {
 	// TODO: DO NOT CODE IT HARD
-	if ok, _ := regexp.Match(SET_OK, res); ok {
+	if ok, _ := regexp.Match(setOK, res); ok {
 		// TODO: validate
 		return "OK", nil
 	}
-	e = errors.New("Response to `SET` is not OK")
+	e = fmt.Errorf("Response to `SET` is not OK")
 	return
 }

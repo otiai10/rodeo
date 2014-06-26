@@ -2,25 +2,29 @@ package redis
 
 import "strings"
 
+// CommandPublish provides TCP communication of `PUBLISH`.
 type CommandPublish struct {
 	chanName string
 	message  string
 	CommandDefault
 }
 
-func (this CommandPublish) Build() []byte {
+// Build builds TCP message by initialized parameters.
+func (cmd CommandPublish) Build() []byte {
 	words := []string{
 		"*3",
-		this.getLenStr(cmdPUBLISH),
+		cmd.getLenStr(cmdPUBLISH),
 		cmdPUBLISH,
-		this.getLenStr(this.chanName),
-		this.chanName,
-		this.getLenStr(this.message),
-		this.message,
+		cmd.getLenStr(cmd.chanName),
+		cmd.chanName,
+		cmd.getLenStr(cmd.message),
+		cmd.message,
 	}
 	joined := strings.Join(words, sep) + sep
 	return []byte(joined)
 }
-func (this CommandPublish) Parse(res []byte) (result string, e error) {
+
+// Parse parses TCP response.
+func (cmd CommandPublish) Parse(res []byte) (result string, e error) {
 	return
 }

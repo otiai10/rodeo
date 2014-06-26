@@ -3,15 +3,11 @@ package redis
 import "github.com/otiai10/rodeo/protocol"
 
 import "net"
-import "errors"
 import "strconv"
 import "bufio"
 import "fmt"
 
-// RedisProtocol
-// 相手がredisであることを知っている
-// redis特有の文字列整形を知っている
-// redisのロジックはすべてここに閉じ込める
+// RedisProtocol knows the way to message TCP.
 type RedisProtocol struct {
 	message  []byte
 	response []byte
@@ -32,6 +28,8 @@ const (
 	cmdZRANGE       = "ZRANGE"
 	cmdSUBSCRIBE    = "SUBSCRIBE"
 	cmdPUBLISH      = "PUBLISH"
+	// ErrorHeader is header of error messages.
+	ErrorHeader = "RedisProtocol: "
 )
 
 // Command interface.
@@ -43,14 +41,13 @@ type Command interface {
 // CommandDefault defines default functionalities.
 type CommandDefault struct{}
 
+// TODO: change method name
 func (d CommandDefault) getLenStr(str string) string {
 	return markerLength + strconv.Itoa(len(str))
 }
 
-var (
-	ErrorHeader = "RedisProtocol: "
-)
-
+// Request is interface to call commands.
+// TODO: だから全てのメソッドがexportedじゃなくて良い気がする
 func (p *RedisProtocol) Request(args ...string) protocol.Protocol {
 	lenArgs := len(args)
 	if lenArgs < 2 {
@@ -85,6 +82,8 @@ func getCommand(cmds []string) (command Command, e error) {
 	e = fmt.Errorf("Command not found for `%s`", cmds[0])
 	return
 }
+
+// Execute command.
 func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 
 	if p.Error != nil {
@@ -111,6 +110,8 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 	p.response = response
 	return p
 }
+
+// WaitFor is io waiter for pub/sub model.
 func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 
 	message := p.Command.Build()
@@ -131,6 +132,8 @@ func (p *RedisProtocol) WaitFor(conn net.Conn, reciever *chan string) {
 		}
 	}()
 }
+
+// ToResult parses TCP response.
 func (p *RedisProtocol) ToResult() (result protocol.Result) {
 	if p.Error != nil {
 		return protocol.Result{Error: p.Error}
@@ -139,6 +142,6 @@ func (p *RedisProtocol) ToResult() (result protocol.Result) {
 	return protocol.Result{Response: res}
 }
 func (p *RedisProtocol) isError(errMessage string) protocol.Protocol {
-	p.Error = errors.New(ErrorHeader + errMessage)
+	p.Error = fmt.Errorf(ErrorHeader + errMessage)
 	return p
 }

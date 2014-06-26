@@ -1,28 +1,31 @@
 package redis
 
-import "errors"
 import "strings"
 import "fmt"
 import "regexp"
 
+// CommandDel provides TCP communication of `DEL`.
 type CommandDel struct {
 	key string
 	CommandDefault
 }
 
+// Build builds TCP message by initialized parameters.
 // TODO: accept multi keys
-func (this CommandDel) Build() []byte {
+func (cmd CommandDel) Build() []byte {
 	words := []string{
 		"*2",
-		this.getLenStr(cmdDEL),
+		cmd.getLenStr(cmdDEL),
 		cmdDEL, // TODO: DRY
-		this.getLenStr(this.key),
-		this.key,
+		cmd.getLenStr(cmd.key),
+		cmd.key,
 	}
 	joined := strings.Join(words, sep) + sep
 	return []byte(joined)
 }
-func (this CommandDel) Parse(res []byte) (result string, e error) {
+
+// Parse parses TCP response.
+func (cmd CommandDel) Parse(res []byte) (result string, e error) {
 
 	// TODO: DO NOT CODE IT HARD
 	if ok, _ := regexp.Match("\\$.+\\r\\n", res); ok {
@@ -31,8 +34,6 @@ func (this CommandDel) Parse(res []byte) (result string, e error) {
 		result = lines[1]
 		return
 	}
-	e = errors.New(
-		fmt.Sprintf("Response to `DEL` is `%v`", string(res)),
-	)
+	e = fmt.Errorf("Response to `DEL` is `%v`", string(res))
 	return
 }
