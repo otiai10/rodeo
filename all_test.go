@@ -163,4 +163,5 @@ func TestVaquero_Tame(t *testing.T) {
 	Expect(t, elms[0].Retrieve()).TypeOf("*rodeo_test.User")
 	anne := elms[0].Retrieve().(*User)
 	Expect(t, anne).Deeply().ToBe(u3)
+	Expect(t, anne.Greet()).ToBe("Hi, I'm Anne. 10 years old.")
 }
