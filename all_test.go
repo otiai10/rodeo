@@ -7,10 +7,8 @@ import "testing"
 import "time"
 import "fmt"
 
-var conf = rodeo.Conf{
-	Host: "localhost",
-	Port: "6379",
-}
+var host = "localhost"
+var port = "6379"
 
 type tStruct0 struct {
 	Foo string
@@ -25,14 +23,14 @@ type Foo struct {
 
 func TestNewVaquero(t *testing.T) {
 
-	vaquero, e := rodeo.NewVaquero(conf, "test")
+	vaquero, e := rodeo.NewVaquero(host, port, "test")
 	Expect(t, e).ToBe(nil)
 	Expect(t, vaquero.Conf.Port).ToBe("6379")
 }
 
 func TestVaquero_Set(t *testing.T) {
 
-	vaquero, e := rodeo.NewVaquero(conf, "test")
+	vaquero, e := rodeo.NewVaquero(host, port, "test")
 
 	e = vaquero.Set("mykey", "12345")
 	Expect(t, e).ToBe(nil)
@@ -54,7 +52,7 @@ func TestVaquero_Set(t *testing.T) {
 
 func TestVaquero_Store(t *testing.T) {
 
-	vaquero, e := rodeo.NewVaquero(conf, "test")
+	vaquero, e := rodeo.NewVaquero(host, port, "test")
 
 	key0 := "mykey0"
 	obj0 := tStruct0{"Hello, rodeo"}
@@ -82,8 +80,8 @@ func TestVaquero_PubSub(t *testing.T) {
 
 	fin := make(chan string)
 
-	vaqueroA, _ := rodeo.NewVaquero(conf, "test")
-	vaqueroB, _ := rodeo.NewVaquero(conf, "test")
+	vaqueroA, _ := rodeo.NewVaquero(host, port, "test")
+	vaqueroB, _ := rodeo.NewVaquero(host, port, "test")
 
 	subscriber := vaqueroA.Sub("mychan")
 
@@ -129,7 +127,7 @@ func (u *User) Greet() string {
 	return fmt.Sprintf("Hi, I'm %s. %d years old.", u.Name, u.Age)
 }
 func TestVaquero_Tame(t *testing.T) {
-	vaquero, _ := rodeo.NewVaquero(conf, "test")
+	vaquero, _ := rodeo.NewVaquero(host, port, "test")
 
 	// truncate
 	vaquero.Delete("test.users")

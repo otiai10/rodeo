@@ -7,22 +7,20 @@ type Vaquero struct {
 }
 
 // Conf is definitions of configuration.
-// TODO: delete
 type Conf struct {
 	Host string
 	Port string
 }
 
 // NewVaquero provide new Vaquero instance.
-// TODO: change name to NewVaquero
-func NewVaquero(conf Conf, args ...string) (v *Vaquero, e error) {
+func NewVaquero(host string, port string, args ...string) (v *Vaquero, e error) {
 	var facade pFacade
-	facade, e = connect(conf.Host, conf.Port)
+	facade, e = connect(host, port)
 	if e != nil {
 		return
 	}
 	v = &Vaquero{
-		conf,
+		Conf{host, port},
 		facade,
 	}
 	return
