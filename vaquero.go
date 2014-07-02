@@ -13,9 +13,9 @@ type Conf struct {
 	Port string
 }
 
-// TheVaquero provide new Vaquero instance.
+// NewVaquero provide new Vaquero instance.
 // TODO: change name to NewVaquero
-func TheVaquero(conf Conf, args ...string) (v *Vaquero, e error) {
+func NewVaquero(conf Conf, args ...string) (v *Vaquero, e error) {
 	var facade pFacade
 	facade, e = connect(conf.Host, conf.Port)
 	if e != nil {

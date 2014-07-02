@@ -23,16 +23,16 @@ type Foo struct {
 	Buz int
 }
 
-func TestTheVaquero(t *testing.T) {
+func TestNewVaquero(t *testing.T) {
 
-	vaquero, e := rodeo.TheVaquero(conf, "test")
+	vaquero, e := rodeo.NewVaquero(conf, "test")
 	Expect(t, e).ToBe(nil)
 	Expect(t, vaquero.Conf.Port).ToBe("6379")
 }
 
 func TestVaquero_Set(t *testing.T) {
 
-	vaquero, e := rodeo.TheVaquero(conf, "test")
+	vaquero, e := rodeo.NewVaquero(conf, "test")
 
 	e = vaquero.Set("mykey", "12345")
 	Expect(t, e).ToBe(nil)
@@ -54,7 +54,7 @@ func TestVaquero_Set(t *testing.T) {
 
 func TestVaquero_Store(t *testing.T) {
 
-	vaquero, e := rodeo.TheVaquero(conf, "test")
+	vaquero, e := rodeo.NewVaquero(conf, "test")
 
 	key0 := "mykey0"
 	obj0 := tStruct0{"Hello, rodeo"}
@@ -82,8 +82,8 @@ func TestVaquero_PubSub(t *testing.T) {
 
 	fin := make(chan string)
 
-	vaqueroA, _ := rodeo.TheVaquero(conf, "test")
-	vaqueroB, _ := rodeo.TheVaquero(conf, "test")
+	vaqueroA, _ := rodeo.NewVaquero(conf, "test")
+	vaqueroB, _ := rodeo.NewVaquero(conf, "test")
 
 	subscriber := vaqueroA.Sub("mychan")
 
@@ -129,7 +129,7 @@ func (u *User) Greet() string {
 	return fmt.Sprintf("Hi, I'm %s. %d years old.", u.Name, u.Age)
 }
 func TestVaquero_Tame(t *testing.T) {
-	vaquero, _ := rodeo.TheVaquero(conf, "test")
+	vaquero, _ := rodeo.NewVaquero(conf, "test")
 
 	// truncate
 	vaquero.Delete("test.users")
