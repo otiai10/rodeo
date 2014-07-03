@@ -29,12 +29,12 @@ func (gr *Group) Add(score int64, v interface{}) (e error) {
 	return gr.facade.ZAdd(gr.key, score, v)
 }
 
-// Find finds scored values in Group.
-func (gr *Group) Find(args ...int) (elements []*Element) {
+// Range finds scored values in Group by rank.
+func (gr *Group) Range(startStop ...int) (elements []*Element) {
 	stuff := gr.representative
 	scoredValues := gr.facade.ZRange(
 		gr.key,
-		args,
+		startStop,
 		stuff,
 	)
 	for _, scored := range scoredValues {

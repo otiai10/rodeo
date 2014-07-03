@@ -154,7 +154,7 @@ func TestVaquero_Tame(t *testing.T) {
 	Expect(t, e).ToBe(nil)
 	Expect(t, count).ToBe(4)
 
-	elms := users.Find() // find all
+	elms := users.Range() // find all
 	Expect(t, elms).TypeOf("[]*rodeo.Element")
 	Expect(t, len(elms)).ToBe(4)
 
