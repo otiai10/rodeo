@@ -1,0 +1,54 @@
+package redis
+
+import "strings"
+import "regexp"
+import "strconv"
+
+// CommandZrange provides TCP communication of `ZRANGE`.
+type CommandZrangeByScore struct {
+	key string
+	min string
+	max string
+	opt string
+	commandDefault
+}
+
+func (cmd CommandZrangeByScore) build() []byte {
+	words := []string{
+		"*5",
+		cmd.strlen(cmdZRANGEBYSCORE),
+		cmdZRANGEBYSCORE,
+		cmd.strlen(cmd.key),
+		cmd.key,
+		cmd.strlen(cmd.min),
+		cmd.min,
+		cmd.strlen(cmd.max),
+		cmd.max,
+		cmd.strlen(cmd.opt),
+		cmd.opt,
+	}
+	joined := strings.Join(words, sep) + sep
+	return []byte(joined)
+}
+
+func (cmd CommandZrangeByScore) parse(res []byte) (result string, e error) {
+	re := regexp.MustCompile("\\*([0-9]+)")
+	var recordsCount int
+	if matches := re.FindStringSubmatch(string(res)); len(matches) > 1 {
+		responseCount, _ := strconv.Atoi(matches[1])
+		recordsCount = responseCount / 2
+	}
+	if recordsCount < 1 {
+		return
+	}
+	pool := make([]string, recordsCount*2)
+	lines := strings.Split(string(res), "\r\n")[1:]
+	for i := 0; i < recordsCount; i++ {
+		indexVal := i*4 + 1
+		indexScore := i*4 + 3
+		pool[i*2] = lines[indexVal]
+		pool[i*2+1] = lines[indexScore]
+	}
+	result = strings.Join(pool, "\n")
+	return
+}
