@@ -136,6 +136,13 @@ func TestVaquero_Tame(t *testing.T) {
 
 	Expect(t, e).ToBe(nil)
 	Expect(t, users).TypeOf("*rodeo.Group")
+}
+
+func TestGroup_Add(t *testing.T) {
+	vaquero, _ := rodeo.NewVaquero(host, port, "test")
+	vaquero.Delete("test.users")
+	users, _ := vaquero.Tame("test.users", User{})
+
 	count, e := users.Count()
 	Expect(t, e).ToBe(nil)
 	Expect(t, count).ToBe(0)
@@ -153,8 +160,24 @@ func TestVaquero_Tame(t *testing.T) {
 	count, e = users.Count()
 	Expect(t, e).ToBe(nil)
 	Expect(t, count).ToBe(4)
+}
 
-	elms := users.Find() // find all
+func TestGroup_Range(t *testing.T) {
+	vaquero, _ := rodeo.NewVaquero(host, port, "test")
+	vaquero.Delete("test.users")
+	users, _ := vaquero.Tame("test.users", User{})
+
+	u0 := &User{"Mary", 28}
+	u1 := &User{"John", 24}
+	u2 := &User{"Steve", 32}
+	u3 := &User{"Anne", 10}
+
+	users.Add(int64(u0.Age), u0)
+	users.Add(int64(u1.Age), u1)
+	users.Add(int64(u2.Age), u2)
+	users.Add(int64(u3.Age), u3)
+
+	elms := users.Range() // find all
 	Expect(t, elms).TypeOf("[]*rodeo.Element")
 	Expect(t, len(elms)).ToBe(4)
 
@@ -162,4 +185,28 @@ func TestVaquero_Tame(t *testing.T) {
 	anne := elms[0].Retrieve().(*User)
 	Expect(t, anne).Deeply().ToBe(u3)
 	Expect(t, anne.Greet()).ToBe("Hi, I'm Anne. 10 years old.")
+}
+
+func TestGroup_Find(t *testing.T) {
+	vaquero, _ := rodeo.NewVaquero(host, port, "test")
+	vaquero.Delete("test.users")
+	users, _ := vaquero.Tame("test.users", User{})
+
+	u0 := &User{"Mary", 28}
+	u1 := &User{"John", 24}
+	u2 := &User{"Steve", 32}
+	u3 := &User{"Anne", 10}
+
+	users.Add(int64(u0.Age), u0)
+	users.Add(int64(u1.Age), u1)
+	users.Add(int64(u2.Age), u2)
+	users.Add(int64(u3.Age), u3)
+
+	elms := users.Find(18, 26)
+	Expect(t, elms).TypeOf("[]*rodeo.Element")
+	Expect(t, len(elms)).ToBe(1)
+
+	Expect(t, elms[0].Retrieve()).TypeOf("*rodeo_test.User")
+	john := elms[0].Retrieve().(*User)
+	Expect(t, john).Deeply().ToBe(u1)
 }

@@ -112,6 +112,34 @@ func (fcd *pFacade) ZRange(key string, args []int, dest interface{}) (vals []sco
 	}
 	return
 }
+func (fcd *pFacade) ZRangeByScore(key string, min int64, max int64, dest interface{}) (vals []scoredValue) {
+	result := fcd.Protcol.Request(
+		"ZRANGEBYSCORE",
+		key,
+		strconv.FormatInt(min, 10),
+		strconv.FormatInt(max, 10),
+		"WITHSCORES",
+	).Execute(fcd.Conn).ToResult()
+	rows := strings.Split(result.Response, "\n")
+	for i := range rows {
+		val := scoredValue{}
+		if i%2 != 0 {
+			continue
+		}
+		score, e := strconv.ParseInt(rows[i+1], 10, 64)
+		if e != nil {
+			// TODO: log?
+			continue
+		}
+		val.Score = score
+		obj := reflect.New(reflect.TypeOf(dest)).Interface()
+		json.Unmarshal([]byte(rows[i]), obj)
+		val.Value = obj
+		vals = append(vals, val)
+	}
+	return
+}
+
 func (fcd *pFacade) Listen(chanName string, ch *chan string) {
 	fcd.Protcol.Request("SUBSCRIBE", chanName).WaitFor(fcd.Conn, ch)
 }

@@ -16,18 +16,19 @@ type RedisProtocol struct {
 }
 
 const (
-	markerLength    = "$"
-	markerNonExists = "$-1"
-	sep             = "\r\n"
-	bufSize         = 1024
-	cmdGET          = "GET"
-	cmdSET          = "SET"
-	cmdDEL          = "DEL"
-	cmdZADD         = "ZADD"
-	cmdZCOUNT       = "ZCOUNT"
-	cmdZRANGE       = "ZRANGE"
-	cmdSUBSCRIBE    = "SUBSCRIBE"
-	cmdPUBLISH      = "PUBLISH"
+	markerLength     = "$"
+	markerNonExists  = "$-1"
+	sep              = "\r\n"
+	bufSize          = 1024
+	cmdGET           = "GET"
+	cmdSET           = "SET"
+	cmdDEL           = "DEL"
+	cmdZADD          = "ZADD"
+	cmdZCOUNT        = "ZCOUNT"
+	cmdZRANGE        = "ZRANGE"
+	cmdZRANGEBYSCORE = "ZRANGEBYSCORE"
+	cmdSUBSCRIBE     = "SUBSCRIBE"
+	cmdPUBLISH       = "PUBLISH"
 	// ErrorHeader is header of error messages.
 	ErrorHeader = "RedisProtocol: "
 )
@@ -78,6 +79,8 @@ func getCommand(cmds []string) (cmd command, e error) {
 		return CommandZcount{key: cmds[1], min: cmds[2], max: cmds[3]}, nil
 	case cmdZRANGE:
 		return CommandZrange{key: cmds[1], start: cmds[2], stop: cmds[3], opt: cmds[4]}, nil
+	case cmdZRANGEBYSCORE:
+		return CommandZrangeByScore{key: cmds[1], min: cmds[2], max: cmds[3], opt: cmds[4]}, nil
 	}
 	e = fmt.Errorf("Command not found for `%s`", cmds[0])
 	return
