@@ -56,7 +56,8 @@ type Member struct {
 }
 
 vaquero, _ := rodeo.NewVaquero("localhost","6379")
-members := vaquero.Tame("members")
+// Give representative dummy object in second arg
+members, _ := vaquero.Tame("members", Member{})
 
 members.Count() // 0
 members.Range().([]Member) // []
