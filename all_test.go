@@ -135,10 +135,10 @@ func TestVaquero_Tame(t *testing.T) {
 	users, e := vaquero.Tame("test.users", User{})
 
 	Expect(t, e).ToBe(nil)
-	Expect(t, users).TypeOf("*rodeo.Group")
+	Expect(t, users).TypeOf("*rodeo.SortedSet")
 }
 
-func TestGroup_Add(t *testing.T) {
+func TestSortedSet_Add(t *testing.T) {
 	vaquero, _ := rodeo.NewVaquero(host, port, "test")
 	vaquero.Delete("test.users")
 	users, _ := vaquero.Tame("test.users", User{})
@@ -162,7 +162,7 @@ func TestGroup_Add(t *testing.T) {
 	Expect(t, count).ToBe(4)
 }
 
-func TestGroup_Range(t *testing.T) {
+func TestSortedSet_Range(t *testing.T) {
 	vaquero, _ := rodeo.NewVaquero(host, port, "test")
 	vaquero.Delete("test.users")
 	users, _ := vaquero.Tame("test.users", User{})
@@ -187,7 +187,7 @@ func TestGroup_Range(t *testing.T) {
 	Expect(t, anne.Greet()).ToBe("Hi, I'm Anne. 10 years old.")
 }
 
-func TestGroup_Find(t *testing.T) {
+func TestSortedSet_Find(t *testing.T) {
 	vaquero, _ := rodeo.NewVaquero(host, port, "test")
 	vaquero.Delete("test.users")
 	users, _ := vaquero.Tame("test.users", User{})

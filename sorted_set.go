@@ -1,13 +1,13 @@
 package rodeo
 
 // Tame provide active model of sorted sets specified by key name.
-func (v *Vaquero) Tame(key string, representative interface{}) (gr *Group, e error) {
-	// TODO: delegate connection of Vaquero to Group
+func (v *Vaquero) Tame(key string, representative interface{}) (ss *SortedSet, e error) {
+	// TODO: delegate connection of Vaquero to SortedSet
 	facade, e := connect(v.Conf.Host, v.Conf.Port)
 	if e != nil {
 		return
 	}
-	gr = &Group{
+	ss = &SortedSet{
 		key:            key,
 		representative: representative,
 		facade:         facade,
@@ -15,25 +15,25 @@ func (v *Vaquero) Tame(key string, representative interface{}) (gr *Group, e err
 	return
 }
 
-// Group is active model of sorted sets.
-type Group struct {
+// SortedSet is active model of sorted sets.
+type SortedSet struct {
 	key            string
 	representative interface{}
 	elements       []Element
 	facade         pFacade
 }
 
-// Add adds value to Group.
-func (gr *Group) Add(score int64, v interface{}) (e error) {
+// Add adds value to SortedSet.
+func (ss *SortedSet) Add(score int64, v interface{}) (e error) {
 	// TODO: validate type of v to equal representative
-	return gr.facade.ZAdd(gr.key, score, v)
+	return ss.facade.ZAdd(ss.key, score, v)
 }
 
-// Range finds scored values in Group by rank.
-func (gr *Group) Range(startStop ...int) (elements []*Element) {
-	stuff := gr.representative
-	scoredValues := gr.facade.ZRange(
-		gr.key,
+// Range finds scored values in SortedSet by rank.
+func (ss *SortedSet) Range(startStop ...int) (elements []*Element) {
+	stuff := ss.representative
+	scoredValues := ss.facade.ZRange(
+		ss.key,
 		startStop,
 		stuff,
 	)
@@ -47,11 +47,11 @@ func (gr *Group) Range(startStop ...int) (elements []*Element) {
 	return
 }
 
-// Find finds scored values in Group by score.
-func (gr *Group) Find(min int64, max int64) (elements []*Element) {
-	stuff := gr.representative
-	scoredValues := gr.facade.ZRangeByScore(
-		gr.key,
+// Find finds scored values in SortedSet by score.
+func (ss *SortedSet) Find(min int64, max int64) (elements []*Element) {
+	stuff := ss.representative
+	scoredValues := ss.facade.ZRangeByScore(
+		ss.key,
 		min,
 		max,
 		stuff,
@@ -66,12 +66,12 @@ func (gr *Group) Find(min int64, max int64) (elements []*Element) {
 	return
 }
 
-// Count counts the values of Group.
-func (gr *Group) Count() (int, error) {
-	return gr.facade.ZCount(gr.key)
+// Count counts the values of SortedSet.
+func (ss *SortedSet) Count() (int, error) {
+	return ss.facade.ZCount(ss.key)
 }
 
-// Element is a model of Group.
+// Element is a model of SortedSet.
 type Element struct {
 	v     interface{}
 	score int64
