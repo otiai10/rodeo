@@ -178,7 +178,7 @@ func TestSortedSet_Range(t *testing.T) {
 	users.Add(int64(u3.Age), u3)
 
 	elms := users.Range() // find all
-	Expect(t, elms).TypeOf("[]*rodeo.Element")
+	Expect(t, elms).TypeOf("[]*rodeo.ScoredValue")
 	Expect(t, len(elms)).ToBe(4)
 
 	Expect(t, elms[0].Retrieve()).TypeOf("*rodeo_test.User")
@@ -203,7 +203,7 @@ func TestSortedSet_Find(t *testing.T) {
 	users.Add(int64(u3.Age), u3)
 
 	elms := users.Find(18, 26)
-	Expect(t, elms).TypeOf("[]*rodeo.Element")
+	Expect(t, elms).TypeOf("[]*rodeo.ScoredValue")
 	Expect(t, len(elms)).ToBe(1)
 
 	Expect(t, elms[0].Retrieve()).TypeOf("*rodeo_test.User")

@@ -19,7 +19,7 @@ func (v *Vaquero) Tame(key string, representative interface{}) (ss *SortedSet, e
 type SortedSet struct {
 	key            string
 	representative interface{}
-	elements       []Element
+	values         []ScoredValue
 	facade         pFacade
 }
 
@@ -30,7 +30,7 @@ func (ss *SortedSet) Add(score int64, v interface{}) (e error) {
 }
 
 // Range finds scored values in SortedSet by rank.
-func (ss *SortedSet) Range(startStop ...int) (elements []*Element) {
+func (ss *SortedSet) Range(startStop ...int) (values []*ScoredValue) {
 	stuff := ss.representative
 	scoredValues := ss.facade.ZRange(
 		ss.key,
@@ -38,17 +38,17 @@ func (ss *SortedSet) Range(startStop ...int) (elements []*Element) {
 		stuff,
 	)
 	for _, scored := range scoredValues {
-		el := &Element{
+		val := &ScoredValue{
 			scored.Value,
 			scored.Score,
 		}
-		elements = append(elements, el)
+		values = append(values, val)
 	}
 	return
 }
 
 // Find finds scored values in SortedSet by score.
-func (ss *SortedSet) Find(min int64, max int64) (elements []*Element) {
+func (ss *SortedSet) Find(min int64, max int64) (values []*ScoredValue) {
 	stuff := ss.representative
 	scoredValues := ss.facade.ZRangeByScore(
 		ss.key,
@@ -57,11 +57,11 @@ func (ss *SortedSet) Find(min int64, max int64) (elements []*Element) {
 		stuff,
 	)
 	for _, scored := range scoredValues {
-		el := &Element{
+		val := &ScoredValue{
 			scored.Value,
 			scored.Score,
 		}
-		elements = append(elements, el)
+		values = append(values, val)
 	}
 	return
 }
@@ -71,19 +71,19 @@ func (ss *SortedSet) Count() (int, error) {
 	return ss.facade.ZCount(ss.key)
 }
 
-// Element is a model of SortedSet.
-type Element struct {
+// ScoredValue is a model of SortedSet.
+type ScoredValue struct {
 	v     interface{}
 	score int64
 }
 
-// Score provides the score of Element.
-func (el *Element) Score() int64 {
-	return el.score
+// Score provides the score of ScoredValue.
+func (val *ScoredValue) Score() int64 {
+	return val.score
 }
 
-// Retrieve provides the value of Element in interface definition.
+// Retrieve provides the value of ScoredValue in interface definition.
 // so it requires type assertion in application layor.
-func (el *Element) Retrieve() interface{} {
-	return el.v
+func (val *ScoredValue) Retrieve() interface{} {
+	return val.v
 }
