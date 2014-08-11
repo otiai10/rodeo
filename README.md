@@ -8,7 +8,7 @@
 ## Set & Get
 can set and get strings by keys.
 ```go
-vaquero, _ := rodeo.TheVaquero(rodeo.Conf{"localhost","6379"})
+vaquero, _ := rodeo.NewVaquero("localhost","6379")
 
 // Set
 _ = vaquero.Set("my_key", "12345")
@@ -24,7 +24,7 @@ type Sample struct {
     Foo string
 }
 
-vaquero, _ := rodeo.TheVaquero(conf)
+vaquero, _ := rodeo.NewVaquero("localhost","6379")
 
 // Store
 obj := Sample{"this is foo"}
@@ -37,7 +37,7 @@ _ = vaquero.Cast("my_key", &dest)
 ```
 ## Pub & Sub
 ```go
-vaqueroA, _ := rodeo.TheVaquero(conf)
+vaqueroA, _ := rodeo.NewVaquero("localhost","6379")
 go func(){
     for {
         message := <-vaqueroA.Sub("mychan")
@@ -45,7 +45,7 @@ go func(){
     }
 }()
 
-vaqueroB, _ := rodeo.TheVaquero(conf)
+vaqueroB, _ := rodeo.NewVaquero("localhost","6379")
 _ = vaqueroB.Pub("mychan", "Hi, this is vaqueroB")
 ```
 ## Tame
@@ -55,7 +55,7 @@ type Member struct {
     Name string
 }
 
-vaquero, _ := rodeo.TheVaquero(conf)
+vaquero, _ := rodeo.NewVaquero("localhost","6379")
 members := vaquero.Tame("members")
 
 members.Count() // 0
