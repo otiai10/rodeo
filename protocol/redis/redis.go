@@ -19,7 +19,7 @@ const (
 	markerLength     = "$"
 	markerNonExists  = "$-1"
 	sep              = "\r\n"
-	bufSize          = 1024
+	bufSize          = 0xffff
 	cmdGET           = "GET"
 	cmdSET           = "SET"
 	cmdDEL           = "DEL"
