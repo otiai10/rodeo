@@ -142,6 +142,15 @@ func (fcd *pFacade) ZRangeByScore(key string, min int64, max int64, dest interfa
 	}
 	return
 }
+func (fcd *pFacade) ZRemRangeByScore(key string, min, max int64) (e error) {
+	result := fcd.Protcol.Request(
+		"ZREMRANGEBYSCORE",
+		key,
+		strconv.FormatInt(min, 10),
+		strconv.FormatInt(max, 10),
+	).Execute(fcd.Conn).ToResult()
+	return result.Error
+}
 
 func (fcd *pFacade) Listen(chanName string, ch *chan string) {
 	fcd.Protcol.Request("SUBSCRIBE", chanName).WaitFor(fcd.Conn, ch)

@@ -66,6 +66,14 @@ func (ss *SortedSet) Find(min int64, max int64) (values []*ScoredValue) {
 	return
 }
 
+func (ss *SortedSet) Sweep(min int64, max int64) (e error) {
+	return ss.facade.ZRemRangeByScore(
+		ss.key,
+		min,
+		max,
+	)
+}
+
 // Count counts the values of SortedSet.
 func (ss *SortedSet) Count() (int, error) {
 	return ss.facade.ZCount(ss.key)

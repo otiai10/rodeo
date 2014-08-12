@@ -210,3 +210,28 @@ func TestSortedSet_Find(t *testing.T) {
 	john := elms[0].Retrieve().(*User)
 	Expect(t, john).Deeply().ToBe(u1)
 }
+
+func TestSortedSet_Sweep(t *testing.T) {
+	vaquero, _ := rodeo.NewVaquero(host, port, "test")
+	vaquero.Delete("test.users")
+	users, _ := vaquero.Tame("test.users", User{})
+
+	u0 := &User{"Mary", 28}
+	u1 := &User{"John", 24}
+	u2 := &User{"Steve", 32}
+	u3 := &User{"Anne", 10}
+
+	users.Add(int64(u0.Age), u0)
+	users.Add(int64(u1.Age), u1)
+	users.Add(int64(u2.Age), u2)
+	users.Add(int64(u3.Age), u3)
+
+	count, _ := users.Count()
+	Expect(t, count).ToBe(4)
+
+	e := users.Sweep(22, 30)
+	Expect(t, e).ToBe(nil)
+
+	count, _ = users.Count()
+	Expect(t, count).ToBe(2)
+}
