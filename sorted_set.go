@@ -74,6 +74,13 @@ func (ss *SortedSet) Sweep(min int64, max int64) (e error) {
 	)
 }
 
+func (ss *SortedSet) Remove(val interface{}) (e error) {
+	return ss.facade.ZRem(
+		ss.key,
+		val,
+	)
+}
+
 // Count counts the values of SortedSet.
 func (ss *SortedSet) Count() (int, error) {
 	return ss.facade.ZCount(ss.key)

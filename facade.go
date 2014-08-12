@@ -151,6 +151,19 @@ func (fcd *pFacade) ZRemRangeByScore(key string, min, max int64) (e error) {
 	).Execute(fcd.Conn).ToResult()
 	return result.Error
 }
+func (fcd *pFacade) ZRem(key string, val interface{}) (e error) {
+	var bs []byte
+	bs, e = json.Marshal(val)
+	if e != nil {
+		return e
+	}
+	result := fcd.Protcol.Request(
+		"ZREM",
+		key,
+		string(bs),
+	).Execute(fcd.Conn).ToResult()
+	return result.Error
+}
 
 func (fcd *pFacade) Listen(chanName string, ch *chan string) {
 	fcd.Protcol.Request("SUBSCRIBE", chanName).WaitFor(fcd.Conn, ch)

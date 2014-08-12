@@ -28,6 +28,7 @@ const (
 	cmdZRANGE           = "ZRANGE"
 	cmdZRANGEBYSCORE    = "ZRANGEBYSCORE"
 	cmdZREMRANGEBYSCORE = "ZREMRANGEBYSCORE"
+	cmdZREM             = "ZREM"
 	cmdSUBSCRIBE        = "SUBSCRIBE"
 	cmdPUBLISH          = "PUBLISH"
 	// ErrorHeader is header of error messages.
@@ -62,6 +63,8 @@ func (p *RedisProtocol) Request(args ...string) protocol.Protocol {
 	p.Command = cmd
 	return p
 }
+
+// TODO: Use factory
 func getCommand(cmds []string) (cmd command, e error) {
 	switch cmds[0] {
 	case cmdGET:
@@ -84,6 +87,8 @@ func getCommand(cmds []string) (cmd command, e error) {
 		return CommandZrangeByScore{key: cmds[1], min: cmds[2], max: cmds[3], opt: cmds[4]}, nil
 	case cmdZREMRANGEBYSCORE:
 		return CommandZRemRangeByScore{key: cmds[1], min: cmds[2], max: cmds[3]}, nil
+	case cmdZREM:
+		return CommandZRem{key: cmds[1], val: cmds[2]}, nil
 	}
 	e = fmt.Errorf("Command not found for `%s`", cmds[0])
 	return
