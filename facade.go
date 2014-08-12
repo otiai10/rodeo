@@ -124,6 +124,9 @@ func (fcd *pFacade) ZRangeByScore(key string, min int64, max int64, dest interfa
 		"WITHSCORES",
 	).Execute(fcd.Conn).ToResult()
 	rows := strings.Split(result.Response, "\n")
+	if len(rows) < 2 {
+		return
+	}
 	for i := range rows {
 		val := scoredValue{}
 		if i%2 != 0 {
