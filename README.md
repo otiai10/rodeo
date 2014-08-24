@@ -80,8 +80,3 @@ found[0].Retrieve().(*Member) // &Member{Name:Paul}
 ```sh
 go test ./...
 ```
-
-# can also support
-
-- [memcached](https://github.com/otiai10/rodeo/tree/master/protocol/memcached)
-

@@ -4,7 +4,6 @@ go:
     - tip
 services:
     - redis-server
-    - memcached
 before_script:
     - go get github.com/otiai10/mint
 script:
