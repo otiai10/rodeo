@@ -107,7 +107,7 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 		return p
 	}
 
-	tcpConnReader := bufio.NewReaderSize(conn, bufSize)
+	tcpConnReader := bufio.NewReader(conn)
 
 	fmt.Fprintf(conn, string(message))
 
