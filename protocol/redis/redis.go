@@ -39,7 +39,7 @@ const (
 // See Redis Protocol
 // http://redis.io/topics/protocol
 var RESP = map[string]*regexp.Regexp{
-	"simple": regexp.MustCompile("\\+(.+)"),
+	"string": regexp.MustCompile("\\+(.+)"),
 	"error":  regexp.MustCompile("-(.+)"),
 	"int":    regexp.MustCompile(":([0-9]+)"),
 	"bulk":   regexp.MustCompile("\\$(-?[0-9]+)"),
@@ -119,25 +119,9 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 		return p
 	}
 
-	tcpConnReader := bufio.NewReader(conn)
-
 	fmt.Fprintf(conn, string(message))
 
-	// {{{
 	p.response = p.Command.hoge(conn)
-	if len(p.response) > 0 {
-		return p
-	}
-	// }}}
-
-	response := make([]byte, bufSize)
-	_, rerr := tcpConnReader.Read(response)
-
-	if rerr != nil {
-		return p.isError(rerr.Error())
-	}
-
-	p.response = response
 	return p
 }
 

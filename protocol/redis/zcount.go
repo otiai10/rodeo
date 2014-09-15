@@ -1,9 +1,8 @@
 package redis
 
 import "strings"
-import "fmt"
-import "regexp"
 import "net"
+import "bufio"
 
 // CommandZcount provides TCP communication of `ZCOUNT`.
 type CommandZcount struct {
@@ -30,15 +29,16 @@ func (cmd CommandZcount) build() []byte {
 }
 
 func (cmd CommandZcount) parse(res []byte) (result string, e error) {
-	re := regexp.MustCompile(":([0-9]+)")
-	if matches := re.FindStringSubmatch(string(res)); len(matches) > 1 {
-		result = matches[1]
-		return
-	}
-	e = fmt.Errorf("Response to `ZCOUNT` is `%v`", string(res))
-	return
+	return string(res), e
 }
 
 func (cmd CommandZcount) hoge(conn net.Conn) (res []byte) {
+	scanner := bufio.NewScanner(conn)
+	if ok := scanner.Scan(); !ok {
+		return
+	}
+	if m := RESP["int"].FindSubmatch(scanner.Bytes()); len(m) > 1 {
+		return m[1]
+	}
 	return
 }

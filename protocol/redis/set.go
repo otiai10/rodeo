@@ -1,9 +1,8 @@
 package redis
 
-import "fmt"
 import "strings"
-import "regexp"
 import "net"
+import "bufio"
 
 // CommandSet provides TCP communication of `SET`.
 type CommandSet struct {
@@ -27,15 +26,16 @@ func (cmd CommandSet) build() []byte {
 }
 
 func (cmd CommandSet) parse(res []byte) (result string, e error) {
-	// TODO: DO NOT CODE IT HARD
-	if ok, _ := regexp.Match("\\+OK", res); ok {
-		// TODO: validate
-		return "OK", nil
-	}
-	e = fmt.Errorf("Response to `SET` is not OK")
-	return
+	return string(res), nil
 }
 
 func (cmd CommandSet) hoge(conn net.Conn) (res []byte) {
+	scanner := bufio.NewScanner(conn)
+	if ok := scanner.Scan(); !ok {
+		return
+	}
+	if m := RESP["string"].FindSubmatch(scanner.Bytes()); len(m) > 1 {
+		return m[1]
+	}
 	return
 }

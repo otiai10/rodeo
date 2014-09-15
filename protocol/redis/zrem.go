@@ -1,9 +1,11 @@
 package redis
 
 import "strings"
-import "fmt"
-import "regexp"
+
+// import "fmt"
+// import "regexp"
 import "net"
+import "bufio"
 
 // CommandZRem provides TCP communication of `ZREM`.
 type CommandZRem struct {
@@ -27,18 +29,24 @@ func (cmd CommandZRem) build() []byte {
 }
 
 func (cmd CommandZRem) parse(res []byte) (result string, e error) {
-
-	// TODO: DO NOT CODE IT HARD
-	if ok, _ := regexp.Match("\\$.+\\r\\n", res); ok {
-		lines := strings.Split(string(res), "\r\n")
-		// TODO: validate
-		result = lines[1]
+	return string(res), e
+	/*
+		// TODO: DO NOT CODE IT HARD
+		if ok, _ := regexp.Match("\\$.+\\r\\n", res); ok {
+			lines := strings.Split(string(res), "\r\n")
+			// TODO: validate
+			result = lines[1]
+			return
+		}
+		e = fmt.Errorf("Response to `ZREM` is `%v`", string(res))
 		return
-	}
-	e = fmt.Errorf("Response to `ZREM` is `%v`", string(res))
-	return
+	*/
 }
 
 func (cmd CommandZRem) hoge(conn net.Conn) (res []byte) {
-	return
+	scanner := bufio.NewScanner(conn)
+	if ok := scanner.Scan(); !ok {
+		return
+	}
+	return scanner.Bytes()
 }
