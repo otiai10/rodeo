@@ -3,6 +3,7 @@ package redis
 import "strings"
 import "fmt"
 import "regexp"
+import "net"
 
 // CommandDel provides TCP communication of `DEL`.
 type CommandDel struct {
@@ -32,5 +33,9 @@ func (cmd CommandDel) parse(res []byte) (result string, e error) {
 		return
 	}
 	e = fmt.Errorf("Response to `DEL` is `%v`", string(res))
+	return
+}
+
+func (cmd CommandDel) hoge(conn net.Conn) (res []byte) {
 	return
 }

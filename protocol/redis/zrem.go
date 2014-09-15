@@ -3,6 +3,7 @@ package redis
 import "strings"
 import "fmt"
 import "regexp"
+import "net"
 
 // CommandZRem provides TCP communication of `ZREM`.
 type CommandZRem struct {
@@ -35,5 +36,9 @@ func (cmd CommandZRem) parse(res []byte) (result string, e error) {
 		return
 	}
 	e = fmt.Errorf("Response to `ZREM` is `%v`", string(res))
+	return
+}
+
+func (cmd CommandZRem) hoge(conn net.Conn) (res []byte) {
 	return
 }

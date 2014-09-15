@@ -3,6 +3,7 @@ package redis
 import "strings"
 import "fmt"
 import "regexp"
+import "net"
 
 // CommandGet provides TCP communication of `GET`.
 type CommandGet struct {
@@ -36,4 +37,8 @@ func (cmd CommandGet) parse(res []byte) (result string, e error) {
 	}
 	e = fmt.Errorf("Response to `Get` is `%v`", string(res))
 	return
+}
+
+func (cmd CommandGet) hoge(conn net.Conn) {
+
 }

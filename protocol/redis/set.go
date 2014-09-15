@@ -3,6 +3,7 @@ package redis
 import "fmt"
 import "strings"
 import "regexp"
+import "net"
 
 // CommandSet provides TCP communication of `SET`.
 type CommandSet struct {
@@ -32,5 +33,9 @@ func (cmd CommandSet) parse(res []byte) (result string, e error) {
 		return "OK", nil
 	}
 	e = fmt.Errorf("Response to `SET` is not OK")
+	return
+}
+
+func (cmd CommandSet) hoge(conn net.Conn) (res []byte) {
 	return
 }

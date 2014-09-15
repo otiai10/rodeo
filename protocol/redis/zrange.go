@@ -3,6 +3,7 @@ package redis
 import "strings"
 import "regexp"
 import "strconv"
+import "net"
 
 // CommandZrange provides TCP communication of `ZRANGE`.
 type CommandZrange struct {
@@ -50,5 +51,9 @@ func (cmd CommandZrange) parse(res []byte) (result string, e error) {
 		pool[i*2+1] = lines[indexScore]
 	}
 	result = strings.Join(pool, "\n")
+	return
+}
+
+func (cmd CommandZrange) hoge(conn net.Conn) (res []byte) {
 	return
 }

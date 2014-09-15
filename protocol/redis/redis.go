@@ -39,6 +39,7 @@ const (
 type command interface {
 	build() []byte
 	parse(res []byte) (string, error)
+	hoge(conn net.Conn) []byte
 }
 
 // CommandDefault defines default functionalities.
@@ -110,6 +111,13 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 	tcpConnReader := bufio.NewReader(conn)
 
 	fmt.Fprintf(conn, string(message))
+
+	// {{{
+	p.response = p.Command.hoge(conn)
+	if len(p.response) > 0 {
+		return p
+	}
+	// }}}
 
 	response := make([]byte, bufSize)
 	_, rerr := tcpConnReader.Read(response)

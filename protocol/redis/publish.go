@@ -1,6 +1,7 @@
 package redis
 
 import "strings"
+import "net"
 
 // CommandPublish provides TCP communication of `PUBLISH`.
 type CommandPublish struct {
@@ -24,5 +25,9 @@ func (cmd CommandPublish) build() []byte {
 }
 
 func (cmd CommandPublish) parse(res []byte) (result string, e error) {
+	return
+}
+
+func (cmd CommandPublish) hoge(conn net.Conn) (res []byte) {
 	return
 }

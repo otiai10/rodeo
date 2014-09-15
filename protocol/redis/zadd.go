@@ -3,6 +3,7 @@ package redis
 import "regexp"
 import "fmt"
 import "strings"
+import "net"
 
 // CommandZadd provides TCP communication of `ZADD`.
 type CommandZadd struct {
@@ -35,5 +36,9 @@ func (cmd CommandZadd) parse(res []byte) (result string, e error) {
 		return "OK", nil
 	}
 	e = fmt.Errorf("Response to `ZADD` is not :1, but %s", string(res))
+	return
+}
+
+func (cmd CommandZadd) hoge(conn net.Conn) (res []byte) {
 	return
 }

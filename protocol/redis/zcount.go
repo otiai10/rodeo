@@ -3,6 +3,7 @@ package redis
 import "strings"
 import "fmt"
 import "regexp"
+import "net"
 
 // CommandZcount provides TCP communication of `ZCOUNT`.
 type CommandZcount struct {
@@ -35,5 +36,9 @@ func (cmd CommandZcount) parse(res []byte) (result string, e error) {
 		return
 	}
 	e = fmt.Errorf("Response to `ZCOUNT` is `%v`", string(res))
+	return
+}
+
+func (cmd CommandZcount) hoge(conn net.Conn) (res []byte) {
 	return
 }
