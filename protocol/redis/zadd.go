@@ -1,8 +1,10 @@
 package redis
 
-import "regexp"
-import "fmt"
+// import "regexp"
+// import "fmt"
 import "strings"
+import "net"
+import "bufio"
 
 // CommandZadd provides TCP communication of `ZADD`.
 type CommandZadd struct {
@@ -29,11 +31,16 @@ func (cmd CommandZadd) build() []byte {
 }
 
 func (cmd CommandZadd) parse(res []byte) (result string, e error) {
-	// TODO: DO NOT CODE IT HARD
-	if ok, _ := regexp.Match(":1", res); ok {
-		// TODO: validate
-		return "OK", nil
+	return string(res), e
+}
+
+func (cmd CommandZadd) hoge(conn net.Conn) (res []byte) {
+	scanner := bufio.NewScanner(conn)
+	if ok := scanner.Scan(); !ok {
+		return
 	}
-	e = fmt.Errorf("Response to `ZADD` is not :1, but %s", string(res))
+	if m := RESP["int"].FindSubmatch(scanner.Bytes()); len(m) > 1 {
+		return m[1]
+	}
 	return
 }

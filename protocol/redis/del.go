@@ -1,8 +1,8 @@
 package redis
 
 import "strings"
-import "fmt"
-import "regexp"
+import "net"
+import "bufio"
 
 // CommandDel provides TCP communication of `DEL`.
 type CommandDel struct {
@@ -23,14 +23,16 @@ func (cmd CommandDel) build() []byte {
 }
 
 func (cmd CommandDel) parse(res []byte) (result string, e error) {
+	return string(res), nil
+}
 
-	// TODO: DO NOT CODE IT HARD
-	if ok, _ := regexp.Match("\\$.+\\r\\n", res); ok {
-		lines := strings.Split(string(res), "\r\n")
-		// TODO: validate
-		result = lines[1]
+func (cmd CommandDel) hoge(conn net.Conn) (res []byte) {
+	scanner := bufio.NewScanner(conn)
+	if ok := scanner.Scan(); !ok {
 		return
 	}
-	e = fmt.Errorf("Response to `DEL` is `%v`", string(res))
+	if m := RESP["int"].FindSubmatch(scanner.Bytes()); len(m) > 1 {
+		return m[1]
+	}
 	return
 }

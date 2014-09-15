@@ -6,6 +6,7 @@ import "net"
 import "strconv"
 import "bufio"
 import "fmt"
+import "regexp"
 
 // RedisProtocol knows the way to message TCP.
 type RedisProtocol struct {
@@ -35,10 +36,21 @@ const (
 	ErrorHeader = "RedisProtocol: "
 )
 
+// See Redis Protocol
+// http://redis.io/topics/protocol
+var RESP = map[string]*regexp.Regexp{
+	"string": regexp.MustCompile("\\+(.+)"),
+	"error":  regexp.MustCompile("-(.+)"),
+	"int":    regexp.MustCompile(":([0-9]+)"),
+	"bulk":   regexp.MustCompile("\\$(-?[0-9]+)"),
+	"array":  regexp.MustCompile("\\*([0-9]+)"),
+}
+
 // Command interface.
 type command interface {
 	build() []byte
 	parse(res []byte) (string, error)
+	hoge(conn net.Conn) []byte
 }
 
 // CommandDefault defines default functionalities.
@@ -107,18 +119,9 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 		return p
 	}
 
-	tcpConnReader := bufio.NewReaderSize(conn, bufSize)
-
 	fmt.Fprintf(conn, string(message))
 
-	response := make([]byte, bufSize)
-	_, rerr := tcpConnReader.Read(response)
-
-	if rerr != nil {
-		return p.isError(rerr.Error())
-	}
-
-	p.response = response
+	p.response = p.Command.hoge(conn)
 	return p
 }
 
