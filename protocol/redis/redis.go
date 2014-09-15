@@ -6,6 +6,7 @@ import "net"
 import "strconv"
 import "bufio"
 import "fmt"
+import "regexp"
 
 // RedisProtocol knows the way to message TCP.
 type RedisProtocol struct {
@@ -34,6 +35,16 @@ const (
 	// ErrorHeader is header of error messages.
 	ErrorHeader = "RedisProtocol: "
 )
+
+// See Redis Protocol
+// http://redis.io/topics/protocol
+var RESP = map[string]*regexp.Regexp{
+	"simple": regexp.MustCompile("\\+(.+)"),
+	"error":  regexp.MustCompile("-(.+)"),
+	"int":    regexp.MustCompile(":([0-9]+)"),
+	"bulk":   regexp.MustCompile("\\$(-?[0-9]+)"),
+	"array":  regexp.MustCompile("\\*([0-9]+)"),
+}
 
 // Command interface.
 type command interface {

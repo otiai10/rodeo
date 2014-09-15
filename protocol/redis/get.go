@@ -1,7 +1,6 @@
 package redis
 
 import "strings"
-import "regexp" // TODO: DRY001
 import "net"
 import "bufio"
 import "strconv"
@@ -32,12 +31,11 @@ func (cmd CommandGet) hoge(conn net.Conn) (res []byte) {
 	// WARN: Do not lock connection
 	// TODO: Timeout
 	scanner := bufio.NewScanner(conn)
-	lenExp := regexp.MustCompile("\\$(-?[0-9]+)")
 	for {
 		if ok := scanner.Scan(); !ok {
 			return
 		}
-		if m := lenExp.FindSubmatch(scanner.Bytes()); len(m) > 1 {
+		if m := RESP["bulk"].FindSubmatch(scanner.Bytes()); len(m) > 1 {
 			num, _ := strconv.Atoi(string(m[1]))
 			if num < 0 {
 				// not found
