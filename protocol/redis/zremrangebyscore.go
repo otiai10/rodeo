@@ -35,7 +35,7 @@ func (cmd CommandZRemRangeByScore) parse(res []byte) (result string, e error) {
 	return string(res), e
 }
 
-func (cmd CommandZRemRangeByScore) hoge(conn net.Conn) (res []byte) {
+func (cmd CommandZRemRangeByScore) scan(conn net.Conn) (res []byte) {
 	scanner := bufio.NewScanner(conn)
 	if ok := scanner.Scan(); !ok {
 		return

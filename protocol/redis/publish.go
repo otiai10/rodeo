@@ -28,6 +28,6 @@ func (cmd CommandPublish) parse(res []byte) (result string, e error) {
 	return
 }
 
-func (cmd CommandPublish) hoge(conn net.Conn) (res []byte) {
+func (cmd CommandPublish) scan(conn net.Conn) (res []byte) {
 	return
 }

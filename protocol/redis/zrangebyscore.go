@@ -59,7 +59,7 @@ func (cmd CommandZrangeByScore) parse(res []byte) (result string, e error) {
 	*/
 }
 
-func (cmd CommandZrangeByScore) hoge(conn net.Conn) (res []byte) {
+func (cmd CommandZrangeByScore) scan(conn net.Conn) (res []byte) {
 	scanner := bufio.NewScanner(conn)
 	if ok := scanner.Scan(); !ok {
 		return

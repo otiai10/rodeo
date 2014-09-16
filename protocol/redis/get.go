@@ -27,7 +27,7 @@ func (cmd CommandGet) parse(res []byte) (result string, e error) {
 	return string(res), nil
 }
 
-func (cmd CommandGet) hoge(conn net.Conn) (res []byte) {
+func (cmd CommandGet) scan(conn net.Conn) (res []byte) {
 	// WARN: Do not lock connection
 	// TODO: Timeout
 	scanner := bufio.NewScanner(conn)

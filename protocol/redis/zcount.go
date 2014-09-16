@@ -32,7 +32,7 @@ func (cmd CommandZcount) parse(res []byte) (result string, e error) {
 	return string(res), e
 }
 
-func (cmd CommandZcount) hoge(conn net.Conn) (res []byte) {
+func (cmd CommandZcount) scan(conn net.Conn) (res []byte) {
 	scanner := bufio.NewScanner(conn)
 	if ok := scanner.Scan(); !ok {
 		return

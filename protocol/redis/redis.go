@@ -50,7 +50,7 @@ var RESP = map[string]*regexp.Regexp{
 type command interface {
 	build() []byte
 	parse(res []byte) (string, error)
-	hoge(conn net.Conn) []byte
+	scan(conn net.Conn) []byte
 }
 
 // CommandDefault defines default functionalities.
@@ -121,7 +121,7 @@ func (p *RedisProtocol) Execute(conn net.Conn) protocol.Protocol {
 
 	fmt.Fprintf(conn, string(message))
 
-	p.response = p.Command.hoge(conn)
+	p.response = p.Command.scan(conn)
 	return p
 }
 

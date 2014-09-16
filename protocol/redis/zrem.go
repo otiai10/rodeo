@@ -43,7 +43,7 @@ func (cmd CommandZRem) parse(res []byte) (result string, e error) {
 	*/
 }
 
-func (cmd CommandZRem) hoge(conn net.Conn) (res []byte) {
+func (cmd CommandZRem) scan(conn net.Conn) (res []byte) {
 	scanner := bufio.NewScanner(conn)
 	if ok := scanner.Scan(); !ok {
 		return

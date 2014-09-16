@@ -29,7 +29,7 @@ func (cmd CommandSet) parse(res []byte) (result string, e error) {
 	return string(res), nil
 }
 
-func (cmd CommandSet) hoge(conn net.Conn) (res []byte) {
+func (cmd CommandSet) scan(conn net.Conn) (res []byte) {
 	scanner := bufio.NewScanner(conn)
 	if ok := scanner.Scan(); !ok {
 		return
