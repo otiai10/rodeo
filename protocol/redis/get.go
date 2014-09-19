@@ -1,8 +1,9 @@
 package redis
 
 import "strings"
-import "fmt"
-import "regexp"
+import "net"
+import "bufio"
+import "strconv"
 
 // CommandGet provides TCP communication of `GET`.
 type CommandGet struct {
@@ -23,17 +24,26 @@ func (cmd CommandGet) build() []byte {
 }
 
 func (cmd CommandGet) parse(res []byte) (result string, e error) {
-	// TODO: DO NOT CODE IT HARD
+	return string(res), nil
+}
 
-	if ok, _ := regexp.Match("\\$.+\\r\\n", res); ok {
-		lines := strings.Split(string(res), "\r\n")
-		if lines[0] == markerNonExists {
+func (cmd CommandGet) scan(conn net.Conn) (res []byte) {
+	// WARN: Do not lock connection
+	// TODO: Timeout
+	scanner := bufio.NewScanner(conn)
+	for {
+		if ok := scanner.Scan(); !ok {
 			return
 		}
-		// TODO: validate
-		result = lines[1]
-		return
+		if m := RESP["bulk"].FindSubmatch(scanner.Bytes()); len(m) > 1 {
+			num, _ := strconv.Atoi(string(m[1]))
+			if num < 0 {
+				// not found
+				return
+			}
+			continue
+		}
+		return scanner.Bytes()
 	}
-	e = fmt.Errorf("Response to `Get` is `%v`", string(res))
 	return
 }

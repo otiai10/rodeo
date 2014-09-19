@@ -3,6 +3,7 @@ package redis
 import "strings"
 import "fmt"
 import "regexp"
+import "net"
 
 // CommandSubscribe provides TCP communication of `SUBSCRIBE`.
 type CommandSubscribe struct {
@@ -34,5 +35,9 @@ func (cmd CommandSubscribe) parse(res []byte) (result string, e error) {
 		return
 	}
 	e = fmt.Errorf("Response to `Get` is `%v`", string(res))
+	return
+}
+
+func (cmd CommandSubscribe) scan(conn net.Conn) (res []byte) {
 	return
 }
